@@ -36,27 +36,31 @@ public class UserController {
         }
     }
 
-    @GetMapping("/by-name")
-    public String getByName(@RequestParam String name, Model model) {
+
+    @GetMapping("/by-name/{name}")
+    public ResponseEntity<List<User>> getUserByName(@PathVariable String name) {
         List<User> users = userService.findByName(name);
-        model.addAttribute("users", users);
-        return "users";
+        if (users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping("/by-email")
-    public String getByEmail(@RequestParam String email, Model model) {
+    @GetMapping("/by-email/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         User user = userService.findByEmail(email);
-        model.addAttribute("user", user);
-        return "user";
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(user, HttpStatus.OK);
 
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<HttpStatus> createUser(@RequestBody String user) {
-        System.out.println(user);
-//        userService.saveUser(user);
-//        return ResponseEntity.ok(HttpStatus.CREATED);
-        return ResponseEntity.ok(HttpStatus.OK);
+    public ResponseEntity<HttpStatus> createUser(@RequestBody User user) {
+        userService.saveUser(user);
+        return ResponseEntity.ok(HttpStatus.CREATED);
+
     }
 
     @PutMapping("/{id}")
