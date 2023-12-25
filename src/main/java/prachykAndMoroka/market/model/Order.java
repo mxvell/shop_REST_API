@@ -10,14 +10,16 @@ public class Order {
     private int id;
     @ManyToOne
     private User user_id;
-    @ManyToOne
-    private Product product_id;
+//    @ManyToOne
+//    private Product product_id;
 
     public Order() {
     }
 
-    public Order(Product productId, User user_id) {
+    public Order(User user_id) {
+        this.user_id = user_id;
     }
+
 
     public User getUser_id() {
         return user_id;
@@ -27,11 +29,4 @@ public class Order {
         this.user_id = user_id;
     }
 
-    public Product getProduct_id() {
-        return product_id;
-    }
-
-    public void setProduct_id(Product product_id) {
-        this.product_id = product_id;
-    }
 }

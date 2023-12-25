@@ -2,6 +2,8 @@ package prachykAndMoroka.market.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "category",schema = "public")
 public class CategoryEntity {
@@ -9,17 +11,18 @@ public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
     @Column(name = "category_name")
     @Enumerated(EnumType.STRING)
     private Category category;
-    @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private Product product;
+    @OneToMany(mappedBy = "categories")
+    private List<Product> product;
 
     public CategoryEntity() {
     }
 
-    public CategoryEntity(Category category, Product product) {
+
+    public CategoryEntity(Category category, List<Product> product) {
         this.category = category;
         this.product = product;
     }
@@ -40,20 +43,11 @@ public class CategoryEntity {
         this.category = category;
     }
 
-    public Product getProduct() {
+    public List<Product> getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(List<Product> product) {
         this.product = product;
-    }
-
-    @Override
-    public String toString() {
-        return "CategoryEntity{" +
-                "id=" + id +
-                ", category=" + category +
-                ", product=" + product +
-                '}';
     }
 }

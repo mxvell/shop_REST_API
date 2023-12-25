@@ -17,20 +17,19 @@ public class Product {
     private String name;
 
 
-    @OneToMany(mappedBy = "product")
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    CategoryEntity categories;
 
-    private List<CategoryEntity> categories;
-
-    @OneToMany(mappedBy = "product_id")
-    private List<Order> orders;
+//    @OneToMany(mappedBy = "product_id")
+//    private List<Order> orders;
 
     public Product() {
     }
 
-    public Product(String name, List<CategoryEntity> categories, List<Order> orders) {
+    public Product(String name, CategoryEntity categories) {
         this.name = name;
         this.categories = categories;
-        this.orders = orders;
     }
 
     public int getId() {
@@ -49,29 +48,15 @@ public class Product {
         this.name = name;
     }
 
-    public List<CategoryEntity> getCategories() {
+    public CategoryEntity getCategories() {
         return categories;
     }
 
-    public void setCategories(List<CategoryEntity> categories) {
+    public void setCategories(CategoryEntity categories) {
         this.categories = categories;
     }
 
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", categories=" + categories +
-                ", orders=" + orders +
-                '}';
-    }
 }
+
+
+
