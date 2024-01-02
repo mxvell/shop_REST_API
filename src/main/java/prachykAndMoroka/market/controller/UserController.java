@@ -1,10 +1,13 @@
 package prachykAndMoroka.market.controller;
 
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import prachykAndMoroka.market.dto.UserDTO;
 import prachykAndMoroka.market.model.User;
 import prachykAndMoroka.market.service.UserService;
 
@@ -14,10 +17,11 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
-
+    private final ModelMapper modelMapper;
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ModelMapper modelMapper) {
         this.userService = userService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
@@ -55,12 +59,17 @@ public class UserController {
 
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<HttpStatus> createUser(@RequestBody User user) {
-        userService.saveUser(user);
+    @PostMapping
+    public ResponseEntity<HttpStatus> createUser(@RequestBody UserDTO userDTO) {
+
+        userService.saveUser(convertToUser(userDTO));
         return ResponseEntity.ok(HttpStatus.CREATED);
 
     }
+    public User convertToUser(UserDTO userDTO){
+        return modelMapper.map(userDTO, User.class);
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<HttpStatus> updateUser(@PathVariable int id, @RequestBody User user) {

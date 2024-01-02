@@ -1,9 +1,9 @@
 package prachykAndMoroka.market.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Entity
 @Table(name = "product",schema = "public")
@@ -12,14 +12,16 @@ public class Product {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private int id;
     @Column(name = "name")
+    @JsonProperty("name")
     private String name;
 
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    CategoryEntity categories;
+    @JsonProperty("category")
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
 //    @OneToMany(mappedBy = "product_id")
 //    private List<Order> orders;
@@ -27,9 +29,9 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, CategoryEntity categories) {
+    public Product(String name, Category categories) {
         this.name = name;
-        this.categories = categories;
+        this.category = categories;
     }
 
     public int getId() {
@@ -48,14 +50,13 @@ public class Product {
         this.name = name;
     }
 
-    public CategoryEntity getCategories() {
-        return categories;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategories(CategoryEntity categories) {
-        this.categories = categories;
+    public void setCategory(Category category) {
+        this.category = category;
     }
-
 }
 
 
