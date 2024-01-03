@@ -35,6 +35,19 @@ public class User {
 
     }
 
+    public User(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public User(int id, String name, String surname, String email) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+    }
+
+
     public User(String name, String surname, String email, Basket basket, List<Order> orders) {
         this.name = name;
         this.surname = surname;
