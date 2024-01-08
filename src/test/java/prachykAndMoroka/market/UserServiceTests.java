@@ -1,5 +1,6 @@
 package prachykAndMoroka.market;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,8 +27,18 @@ class UserServiceTests {
     private static final User testUserInDatabase = new User(1, "John", "Doe", "213213@gmasil.com", null, new ArrayList<Order>());
 
     @BeforeAll
-    public void beforeTest() {
+    public void beforeTests() {
+        
+        if (userService.findAll().size() > 0){
+            userService.deleteAll();
+        }
+        
         userService.saveUser(testUserInDatabase);
+    }
+    
+    @AfterAll
+    public void afterTests () {
+        userService.deleteAll();
     }
 
     @Test
