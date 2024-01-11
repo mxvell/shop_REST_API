@@ -55,8 +55,7 @@ class UserServiceTests {
     @Test
     void testFindByNameWhenUsersExist() {
       List<User> myUser = userService.findByName("John");
-        //TODO
-      assertEquals(testUserInDatabase,myUser);
+      assertEquals(testUserInDatabase,myUser.get(0));
 
     }
 
