@@ -2,8 +2,10 @@ package prachykAndMoroka.market.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +30,11 @@ public class User {
     private String email;
 
 
+
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
     private Basket basket;
     @OneToMany(mappedBy = "user_id", fetch = FetchType.EAGER)
-    private List<Order>orders;
+    private List<Order> orders;
 
     public User() {
 
@@ -123,4 +126,5 @@ public class User {
                 ", orders=" + orders +
                 '}';
     }
+
 }

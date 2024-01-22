@@ -2,6 +2,8 @@ package prachykAndMoroka.market.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "basket", schema = "public")
 public class Basket {
@@ -12,8 +14,31 @@ public class Basket {
     @OneToOne
     @JoinColumn(name = "basket_id", referencedColumnName = "id")
     private User user;
-
+    @OneToMany
+    private List<Product> products;
+    private int quantity;
     public Basket() {
+    }
+
+    public Basket(List<Product> products, int quantity) {
+        this.products = products;
+        this.quantity = quantity;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public Basket(User user) {

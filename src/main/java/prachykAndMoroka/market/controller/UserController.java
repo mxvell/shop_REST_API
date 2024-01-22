@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import prachykAndMoroka.market.dto.UserDTO;
+import prachykAndMoroka.market.model.Product;
 import prachykAndMoroka.market.model.User;
 import prachykAndMoroka.market.service.UserService;
 
@@ -22,6 +23,7 @@ public class UserController {
     public UserController(UserService userService, ModelMapper modelMapper) {
         this.userService = userService;
         this.modelMapper = modelMapper;
+
     }
 
     @GetMapping
@@ -83,6 +85,32 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
+//    @PostMapping("/basket/add")
+//    public ResponseEntity<?> addToBasket(@RequestBody List<Product> products, @RequestParam int quantity){
+//
+//        userService.addToBasket(products, quantity);
+//
+//        return ResponseEntity.ok().build();
+//
+//    }
+//
+//    @DeleteMapping("/basket/delete")
+//    public ResponseEntity<?> deleteFromBasket(@RequestBody List<Product> products){
+//
+//        userService.deleteToBasket(products);
+//
+//        return ResponseEntity.ok().build();
+//
+//    }
+//
+//    @GetMapping("/basket/total")
+//    public ResponseEntity<Double> getTotalPrice(List<Product> products, int quant){
+//
+//        double total = userService.getTotalPrice(products, quant);
+//
+//        return ResponseEntity.ok(total);
+//
+//    }
 }
 
 

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Entity
 @Table(name = "product",schema = "public")
 @Component
@@ -18,10 +20,11 @@ public class Product {
     @JsonProperty("name")
     private String name;
 
-
+   private double price;
     @JsonProperty("category")
     @Enumerated(EnumType.STRING)
     private Category category;
+
 
 //    @OneToMany(mappedBy = "product_id")
 //    private List<Order> orders;
@@ -59,5 +62,12 @@ public class Product {
     }
 }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
 
