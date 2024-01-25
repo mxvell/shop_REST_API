@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+
 
 @Entity
 @Table(name = "product",schema = "public")
@@ -20,7 +20,7 @@ public class Product {
     @JsonProperty("name")
     private String name;
 
-   private double price;
+    private double price;
     @JsonProperty("category")
     @Enumerated(EnumType.STRING)
     private Category category;
@@ -60,7 +60,7 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
     }
-}
+
 
     public double getPrice() {
         return price;
@@ -69,5 +69,6 @@ public class Product {
     public void setPrice(double price) {
         this.price = price;
     }
+}
 
 

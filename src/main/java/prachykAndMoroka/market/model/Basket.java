@@ -2,6 +2,7 @@ package prachykAndMoroka.market.model;
 
 import jakarta.persistence.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -17,6 +18,7 @@ public class Basket {
     @OneToMany
     private List<Product> products;
     private int quantity;
+
     public Basket() {
     }
 
@@ -28,6 +30,26 @@ public class Basket {
     public List<Product> getProducts() {
         return products;
     }
+
+    public void deleteProductsByIndex(int index) {
+        if (products.size() > index) {
+            products.remove(index);
+        }
+    }
+
+    public void deleteAllProducts() {
+        if (!products.isEmpty()) {
+            products.clear();
+        }
+    }
+
+     public double getTotalPrice(){
+       double total = 0;
+       for (Product product : products){
+           total += product.getPrice();
+       }
+       return  total;
+     }
 
     public void setProducts(List<Product> products) {
         this.products = products;

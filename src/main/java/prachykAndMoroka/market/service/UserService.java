@@ -16,11 +16,9 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
-    private final BasketService basketService;
     @Autowired
-    public UserService(UserRepository userRepository, BasketService basketService) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.basketService = basketService;
     }
 
     public List<User> findAll(){
@@ -39,6 +37,7 @@ public class UserService {
     }
 
     public void saveUser (User userSaved){
+
         userRepository.save(userSaved);
     }
 
@@ -53,17 +52,5 @@ public class UserService {
     
     public void deleteAll() {
         userRepository.deleteAll();
-    }
-    @Transactional
-    public void addToBasket(List<Product> products, int quantity){
-        basketService.addProductInBasket(products,quantity);
-    }
-    @Transactional
-    public void deleteToBasket(List<Product> products){
-        basketService.deleteProductInBasket(products);
-    }
-    @Transactional
-    public double getTotalPrice(List<Product> products, int quant){
-        return basketService.getTotalPriceInBasket(products,quant);
     }
 }

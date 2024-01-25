@@ -85,32 +85,33 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
-//    @PostMapping("/basket/add")
-//    public ResponseEntity<?> addToBasket(@RequestBody List<Product> products, @RequestParam int quantity){
-//
-//        userService.addToBasket(products, quantity);
-//
-//        return ResponseEntity.ok().build();
-//
-//    }
-//
-//    @DeleteMapping("/basket/delete")
-//    public ResponseEntity<?> deleteFromBasket(@RequestBody List<Product> products){
-//
-//        userService.deleteToBasket(products);
-//
-//        return ResponseEntity.ok().build();
-//
-//    }
-//
-//    @GetMapping("/basket/total")
-//    public ResponseEntity<Double> getTotalPrice(List<Product> products, int quant){
-//
-//        double total = userService.getTotalPrice(products, quant);
-//
-//        return ResponseEntity.ok(total);
-//
-//    }
+    @PostMapping("/basket/add")
+    public ResponseEntity<?> addToBasket(@RequestBody Product products, @RequestParam int quantity){
+
+        User user = new User();
+        user.addProductToBasket(products,quantity);
+
+        return ResponseEntity.ok().build();
+
+    }
+
+    @DeleteMapping("/basket/deleteAll")
+    public ResponseEntity<?> clearBasket(){
+
+         User user = new User();
+         user.deleteAllProductsFromBasket();
+
+        return ResponseEntity.ok().build();
+
+    }
+
+    @GetMapping("/basket/total")
+    public ResponseEntity<Double> getTotalPrice(){
+
+         User user = new User();
+        return ResponseEntity.ok(user.getTotalPriceInBasket());
+
+    }
 }
 
 
