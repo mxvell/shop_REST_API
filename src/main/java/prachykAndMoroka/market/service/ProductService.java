@@ -7,7 +7,6 @@ import prachykAndMoroka.market.dto.ProductDTO;
 import prachykAndMoroka.market.model.Category;
 import prachykAndMoroka.market.model.Product;
 import prachykAndMoroka.market.repository.ProductRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +19,6 @@ public class ProductService {
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
-
-
     public List<Product> findAll (){
         return productRepository.findAll();
     }
@@ -47,6 +44,7 @@ public class ProductService {
         product.setId(productSaved.getProduct().getId());
         product.setName(productSaved.getName());
         product.setCategory(productSaved.getProduct().getCategory());
+        product.setPrice(productSaved.getPrice());
         productRepository.save(product);
     }
     @Transactional

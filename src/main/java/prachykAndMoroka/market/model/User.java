@@ -2,7 +2,6 @@ package prachykAndMoroka.market.model;
 
 import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -37,8 +36,8 @@ public class User {
     public void deleteAllProductsFromBasket() {
         basket.deleteAllProducts();
     }
-    public double getTotalPriceInBasket() {
-       return basket.getTotalPrice();
+    public double getTotalPriceInBasket(List<Product>products) {
+       return basket.getTotalPrice(products);
     }
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
     private Basket basket;
@@ -55,39 +54,30 @@ public class User {
         this.basket = basket;
         this.orders = orders;
     }
-
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public String getSurname() {
         return surname;
     }
-
     public void setSurname(String surname) {
         this.surname = surname;
     }
-
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,12 +85,10 @@ public class User {
         User user = (User) o;
         return id == user.id && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(email, user.email) && Objects.equals(basket, user.basket) && Objects.equals(orders, user.orders);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(id, name, surname, email, basket, orders);
     }
-
     @Override
     public String toString() {
         return "User{" +

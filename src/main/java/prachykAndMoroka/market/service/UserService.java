@@ -1,14 +1,10 @@
 package prachykAndMoroka.market.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import prachykAndMoroka.market.model.Product;
 import prachykAndMoroka.market.model.User;
 import prachykAndMoroka.market.repository.UserRepository;
-
-import java.net.PortUnreachableException;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,11 +16,9 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
     public List<User> findAll(){
         return userRepository.findAll();
     }
-
     public User findById (int id){
         Optional<User> foundUser = userRepository.findById(id);
         return foundUser.orElse(null);
@@ -35,21 +29,19 @@ public class UserService {
     public User findByEmail (String email){
         return userRepository.findByEmail(email);
     }
-
+    @Transactional
     public void saveUser (User userSaved){
-
         userRepository.save(userSaved);
     }
-
+   @Transactional
     public void updateUser(int id,User updUser){
         updUser.setId(id);
         userRepository.save(updUser);
     }
-
+   @Transactional
     public void delete(int id){
         userRepository.deleteById(id);
     }
-    
     public void deleteAll() {
         userRepository.deleteAll();
     }
