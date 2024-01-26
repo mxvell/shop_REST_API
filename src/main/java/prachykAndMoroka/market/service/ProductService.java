@@ -41,7 +41,7 @@ public class ProductService {
         }
         return productRepository.findByNameStartingWith(firstWordsProducts);
     }
-    @Transactional
+   @Transactional
     public void saveProduct (ProductDTO productSaved){
         Product product = new Product();
         product.setId(productSaved.getProduct().getId());
@@ -49,7 +49,7 @@ public class ProductService {
         product.setCategory(productSaved.getProduct().getCategory());
         productRepository.save(product);
     }
-    @Transactional
+   @Transactional
     public void updateProduct(int id, Product updProduct){
         updProduct.setId(id);
         productRepository.save(updProduct);
@@ -58,5 +58,9 @@ public class ProductService {
     public void deleteProduct(int id){
         productRepository.deleteById(id);
     }
+      public void deleteAll(){
+        productRepository.deleteAll();
+      }
+
 
 }

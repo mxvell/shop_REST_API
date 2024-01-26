@@ -8,7 +8,10 @@ import prachykAndMoroka.market.dto.ProductDTO;
 import prachykAndMoroka.market.model.Product;
 import prachykAndMoroka.market.service.ProductService;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/product")
@@ -57,8 +60,32 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable int id) {
+    public ResponseEntity<HttpStatus> deleteProduct(@PathVariable int id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+    @GetMapping("/random")
+    public ResponseEntity<Product> getRandomProduct(){
+        List<Product> productList = productService.findAll();
+        if (productList.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        int randomIndex = new Random().nextInt(productList.size());
+        Product randomProduct = productList.get(randomIndex);
+        return ResponseEntity.ok(randomProduct);
+    }
+
+    @GetMapping("/random/{count}")
+    public ResponseEntity<List<Product>> getSomeRandomProducts(@PathVariable int count){
+        List<Product> allProducts = productService.findAll();
+        if (allProducts.size() < count){
+            return ResponseEntity.badRequest().build();
+        }
+        Collections.shuffle(allProducts);
+        List<Product> randomProducts = new ArrayList<>();
+        for (int i = 0; i < count; i++){
+            randomProducts.add(allProducts.get(i));
+        }
+        return ResponseEntity.ok(randomProducts);
     }
 }

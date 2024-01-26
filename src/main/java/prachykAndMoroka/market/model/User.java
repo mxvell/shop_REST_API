@@ -5,7 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @Entity
@@ -26,9 +28,9 @@ public class User {
     private String email;
 
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
     private Basket basket;
-    @OneToMany(mappedBy = "user_id")
+    @OneToMany(mappedBy = "user_id", fetch = FetchType.EAGER)
     private List<Order>orders;
 
     public User() {
@@ -56,6 +58,14 @@ public class User {
         this.orders = orders;
     }
 
+    public User(int id, String name, String surname, String email, Basket basket, List<Order> orders) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.basket = basket;
+        this.orders = orders;
+    }
 
     public int getId() {
         return id;
@@ -87,6 +97,19 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(email, user.email) && Objects.equals(basket, user.basket) && Objects.equals(orders, user.orders);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, surname, email, basket, orders);
     }
 
     @Override

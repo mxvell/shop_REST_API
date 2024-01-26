@@ -34,17 +34,21 @@ public class UserService {
     public User findByEmail (String email){
         return userRepository.findByEmail(email);
     }
-    @Transactional
+
     public void saveUser (User userSaved){
         userRepository.save(userSaved);
     }
-    @Transactional
+
     public void updateUser(int id,User updUser){
         updUser.setId(id);
         userRepository.save(updUser);
     }
-    @Transactional
+
     public void delete(int id){
         userRepository.deleteById(id);
+    }
+    
+    public void deleteAll() {
+        userRepository.deleteAll();
     }
 }

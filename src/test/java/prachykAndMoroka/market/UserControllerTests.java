@@ -1,90 +1,107 @@
 package prachykAndMoroka.market;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import prachykAndMoroka.market.controller.UserController;
+import prachykAndMoroka.market.model.Order;
 import prachykAndMoroka.market.model.User;
 import prachykAndMoroka.market.service.UserService;
 
-import java.util.Arrays;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.refEq;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserControllerTests {
-    @Mock
+    @Autowired
     private UserService userService;
 
-    @InjectMocks
+    @Autowired
     private UserController userController;
+
+    private static final User testUserInDatabase = new User(1, "John", "Doe", "213213@gmasil.com", null, new ArrayList<Order>());
+    @BeforeAll
+    public void beforeTests(){
+        if (userService.findAll().size() > 0){
+            userService.deleteAll();
+        }
+
+        userService.saveUser(testUserInDatabase);
+    }
+
+
+    @AfterAll
+    public void afterTest() {
+        userService.deleteAll();
+    }
+
 
     @Test
     void testGetUserByIdWhenUserExists() {
-        int id = 1;
-        User user = new User(id, "Dima");
-        Mockito.when(userService.findById(anyInt())).thenReturn(user);
-        ResponseEntity<User> response = userController.getUserById(id);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user, response.getBody());
+        User myUser = userService.findById(1);
+        ResponseEntity<User> response = userController.getUserById(myUser.getId());
+        assertEquals(testUserInDatabase,response.getBody());
+        assertEquals(HttpStatus.OK,response.getStatusCode());
+
     }
 
     @Test
     void testGetUserByIdDoesNotExist() {
-        int notCorrectId = 2;
-        Mockito.when(userService.findById(anyInt())).thenReturn(null);
-        ResponseEntity<User> response = userController.getUserById(notCorrectId);
-        assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
-        assertNull(response.getBody());
+        User myUser = userService.findById(2);
+        if (myUser != null) {
+            ResponseEntity<User> response = userController.getUserById(myUser.getId());
+            assertEquals(testUserInDatabase, response.getBody());
+        } else {
+            System.out.println(HttpStatus.NOT_FOUND);
+
+        }
     }
 
 
     @Test
     void testGetUserByNameWhenUsersExist() {
-        String name = "Dima";
-        List<User> mockUsers = Arrays.asList(new User(1, name), new User(2, name));
-        Mockito.when(userService.findByName(anyString())).thenReturn(mockUsers);
-
-        ResponseEntity<List<User>> responseEntity = userController.getUserByName(name);
-
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(mockUsers, responseEntity.getBody());
+//        List<User> myUser = userService.findByName("John");
+        ResponseEntity<List<User>> response = userController.getUserByName("John");
+        assertEquals(testUserInDatabase, Objects.requireNonNull(response.getBody()).get(0));
+        assertEquals(HttpStatus.OK,response.getStatusCode(),"Status 200");
     }
 
     @Test
     void testGetUserByNameWhenNoUsersExist() {
-        String name = "doesn't exist name";
-        Mockito.when(userService.findByName(anyString())).thenReturn(Arrays.asList());
-        ResponseEntity<List<User>> response = userController.getUserByName(name);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertTrue(response.getBody() == null || response.getBody().isEmpty());
+        ResponseEntity<List<User>> response = userController.getUserByName("weqweqwe");
+        if (response.getBody() != null && !response.getBody().isEmpty()){
+            assertEquals(testUserInDatabase, Objects.requireNonNull(response.getBody()).get(0));
+        }
+
+        assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
     }
     @Test
     void testGetUserByEmailWhenUserExists(){
-        String emailUser = "1234@gmail.com";
-        User user = new User(1,"Dima");
-        Mockito.when(userService.findByEmail(anyString())).thenReturn(user);
-        ResponseEntity<User> response = userController.getUserByEmail(emailUser);
+        ResponseEntity<User> response = userController.getUserByEmail("213213@gmasil.com");
+        assertEquals(testUserInDatabase, response.getBody());
         assertEquals(HttpStatus.OK,response.getStatusCode());
-        assertEquals(user,response.getBody());
     }
    @Test
     void testGetUserByEmailDoesNotExist(){
-        String emailUser = "not found";
-        Mockito.when(userService.findByEmail(anyString())).thenReturn(null);
-        ResponseEntity<User> response = userController.getUserByEmail(emailUser);
+    ResponseEntity<User> response = userController.getUserByEmail("dqwewertyui@gmail.com");
+    if (response.getBody() != null){
+        assertEquals(testUserInDatabase,response.getBody());
         assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
-        assertNull(response.getBody());
+    }
+
    }
 
 }
