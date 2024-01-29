@@ -27,6 +27,7 @@ public class Product {
 //    private List<Order> orders;
     public Product() {
     }
+
     public Product(String name, Category categories) {
         this.name = name;
         this.category = categories;
