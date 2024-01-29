@@ -17,17 +17,14 @@ import java.util.Random;
 @RequestMapping("/product")
 public class ProductController {
     private final ProductService productService;
-
     @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
-
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.findAll();
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable int id) {
         Product product = productService.findById(id);
@@ -37,7 +34,6 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
-
     @GetMapping("by-name/{name}")
     public ResponseEntity<List<Product>> getByFirstWordsProducts(@PathVariable String startWith) {
         List<Product> products = productService.findByNameStartingWith(startWith);
@@ -46,19 +42,16 @@ public class ProductController {
         }
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
-
     @PostMapping
     public ResponseEntity<HttpStatus> createProduct(@RequestBody ProductDTO productDTO) {
         productService.saveProduct(productDTO);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
-
     @PutMapping("/{id}")
     public ResponseEntity<HttpStatus> updateProduct(@PathVariable int id, @RequestBody Product product) {
         productService.updateProduct(id, product);
         return ResponseEntity.ok(HttpStatus.OK);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteProduct(@PathVariable int id) {
         productService.deleteProduct(id);

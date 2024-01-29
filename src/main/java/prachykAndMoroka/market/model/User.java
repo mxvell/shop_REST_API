@@ -1,11 +1,7 @@
 package prachykAndMoroka.market.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,47 +13,39 @@ public class User {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     @Column(name = "name")
-
     private String name;
     @Column(name = "surname")
     private String surname;
-
     @Column(name = "email")
     private String email;
+    public void addProductToBasket(Product product) {
+        addProductToBasket(product, 1);
+    }
+    public void addProductToBasket(Product product, int quantity) {
+        for (int i = 1; i < quantity; i++) {
+            basket.getProducts().add(product);
+        }
 
-
+    }
+    public void deleteProductFromBasketIndex(int index) {
+        if (!basket.getProducts().isEmpty()) {
+            basket.deleteProductsByIndex(index);
+        }
+    }
+    public void deleteAllProductsFromBasket() {
+        basket.deleteAllProducts();
+    }
+    public double getTotalPriceInBasket(List<Product>products) {
+       return basket.getTotalPrice(products);
+    }
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
     private Basket basket;
     @OneToMany(mappedBy = "user_id", fetch = FetchType.EAGER)
-    private List<Order>orders;
-
+    private List<Order> orders;
     public User() {
 
     }
-
-    public User(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public User(int id, String name, String surname, String email) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-    }
-
-
-    public User(String name, String surname, String email, Basket basket, List<Order> orders) {
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.basket = basket;
-        this.orders = orders;
-    }
-
     public User(int id, String name, String surname, String email, Basket basket, List<Order> orders) {
         this.id = id;
         this.name = name;
@@ -66,39 +54,30 @@ public class User {
         this.basket = basket;
         this.orders = orders;
     }
-
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public String getSurname() {
         return surname;
     }
-
     public void setSurname(String surname) {
         this.surname = surname;
     }
-
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -106,12 +85,10 @@ public class User {
         User user = (User) o;
         return id == user.id && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(email, user.email) && Objects.equals(basket, user.basket) && Objects.equals(orders, user.orders);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(id, name, surname, email, basket, orders);
     }
-
     @Override
     public String toString() {
         return "User{" +
@@ -123,4 +100,5 @@ public class User {
                 ", orders=" + orders +
                 '}';
     }
+
 }
