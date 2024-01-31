@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.UniqueElements;
+import prachykAndMoroka.market.model.Image;
 import prachykAndMoroka.market.model.Product;
 
 
@@ -22,27 +23,46 @@ public class ProductDTO {
     @Min(15)
     @Max(40000)
     private double price;
-    public ProductDTO(String name, Product product, double price) {
+    private Image image;
+
+    public ProductDTO(String name, Product product, double price, Image image) {
         this.name = name;
         this.product = product;
         this.price = price;
+        this.image = image;
     }
+
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public Product getProduct() {
         return product;
     }
+
     public void setProduct(Product product) {
         this.product = product;
     }
+
     public double getPrice() {
         return price;
     }
+
     public void setPrice(double price) {
         this.price = price;
     }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
 }
+
