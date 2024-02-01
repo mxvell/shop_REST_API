@@ -34,10 +34,12 @@ public class Product {
 
     public Product() {
     }
+
     public void addImageToProduct(Image image) {
         image.setProduct(this);
         images.add(image);
     }
+
 
     public Product(String name, Category categories) {
         this.name = name;
