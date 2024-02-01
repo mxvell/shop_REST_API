@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import prachykAndMoroka.market.dto.ProductDTO;
 import prachykAndMoroka.market.model.Product;
 import prachykAndMoroka.market.service.ProductService;
 
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,8 +46,9 @@ public class ProductController {
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
     @PostMapping
-    public ResponseEntity<HttpStatus> createProduct(@RequestBody ProductDTO productDTO) {
-        productService.saveProduct(productDTO);
+    public ResponseEntity<HttpStatus> createProduct(@RequestBody ProductDTO productDTO,@RequestParam("file1")MultipartFile file1,
+                                                    @RequestParam("file2")MultipartFile file2,@RequestParam("file3")MultipartFile file3)  throws IOException {
+        productService.saveProduct(productDTO,file1,file2,file3);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
