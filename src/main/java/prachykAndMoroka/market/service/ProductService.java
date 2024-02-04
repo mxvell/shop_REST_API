@@ -47,11 +47,16 @@ public class ProductService {
         return productRepository.findByNameStartingWith(firstWordsProducts);
     }
 
+
     @Transactional
     public void saveProduct(ProductDTO productSaved, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException {
         Image image1;
         Image image2;
         Image image3;
+
+
+   @Transactional
+    public void saveProduct (ProductDTO productSaved){
 
         Product product = new Product();
         if (file1.getSize() != 0) {
@@ -75,6 +80,7 @@ public class ProductService {
         productRepository.save(product);
     }
 
+
     private Image toImageEntity(MultipartFile file) throws IOException {
         Image image = new Image();
         image.setName(file.getName());
@@ -87,6 +93,10 @@ public class ProductService {
 
     @Transactional
     public void updateProduct(int id, Product updProduct) {
+
+   @Transactional
+    public void updateProduct(int id, Product updProduct){
+
         updProduct.setId(id);
         productRepository.save(updProduct);
     }
@@ -95,5 +105,9 @@ public class ProductService {
     public void deleteProduct(int id) {
         productRepository.deleteById(id);
     }
+      public void deleteAll(){
+        productRepository.deleteAll();
+      }
+
 
 }
