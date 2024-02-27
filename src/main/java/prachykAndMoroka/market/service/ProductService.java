@@ -49,59 +49,45 @@ public class ProductService {
 
 
     @Transactional
-    public void saveProduct(ProductDTO productSaved, MultipartFile file1, MultipartFile file2, MultipartFile file3) throws IOException {
-        Image image1;
-        Image image2;
-        Image image3;
-
-            Product product = new Product();
-            if (file1.getSize() != 0) {
-                image1 = toImageEntity(file1);
-                product.addImageToProduct(image1);
-            }
-            if (file2.getSize() != 0) {
-                image2 = toImageEntity(file1);
-                product.addImageToProduct(image2);
-            }
-            if (file3.getSize() != 0) {
-                image3 = toImageEntity(file1);
-                product.addImageToProduct(image3);
-            }
-            product.setId(productSaved.getProduct().getId());
-            product.setName(productSaved.getName());
-            product.setCategory(productSaved.getProduct().getCategory());
-            product.setPrice(productSaved.getPrice());
-            Product productFromDb = productRepository.save(product);
-            productFromDb.setPreviewImageId(productFromDb.getImages().get(0).getId());
-            productRepository.save(product);
-        }
-
-
-        private Image toImageEntity (MultipartFile file) throws IOException {
-            Image image = new Image();
-            image.setName(file.getName());
-            image.setOriginalFileName(file.getOriginalFilename());
-            image.setContentType(file.getContentType());
-            image.setSize(file.getSize());
-            image.setBytes(file.getBytes());
-            return image;
-        }
-
-
-        @Transactional
-        public void updateProduct ( int id, Product updProduct){
-
-            updProduct.setId(id);
-            productRepository.save(updProduct);
-        }
-
-        @Transactional
-        public void deleteProduct ( int id){
-            productRepository.deleteById(id);
-        }
-        public void deleteAll () {
-            productRepository.deleteAll();
-        }
-
+    public void saveProduct(ProductDTO productSaved) throws IOException {
+        Product product = new Product();
+        product.setId(productSaved.getProduct().getId());
+        product.setName(productSaved.getName());
+        product.setCategory(productSaved.getProduct().getCategory());
+        product.setPrice(productSaved.getPrice());
+        productRepository.save(product);
     }
+
+
+    private Image toImageEntity(MultipartFile file) throws IOException {
+        Image image = new Image();
+        image.setName(file.getName());
+        image.setOriginalFileName(file.getOriginalFilename());
+        image.setContentType(file.getContentType());
+        image.setSize(file.getSize());
+        image.setBytes(file.getBytes());
+        return image;
+    }
+
+    /**
+     *
+     * @param id
+     * @param updProduct
+     */
+    @Transactional
+    public void updateProduct(int id, Product updProduct) {
+        updProduct.setId(id);
+        productRepository.save(updProduct);
+    }
+
+    @Transactional
+    public void deleteProduct(int id) {
+        productRepository.deleteById(id);
+    }
+
+    public void deleteAll() {
+        productRepository.deleteAll();
+    }
+
+}
 

@@ -10,18 +10,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import prachykAndMoroka.market.controller.UserController;
-import prachykAndMoroka.market.model.Order;
-import prachykAndMoroka.market.model.User;
+import prachykAndMoroka.market.model.*;
 import prachykAndMoroka.market.service.UserService;
 
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.refEq;
+
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -32,7 +31,11 @@ class UserControllerTests {
     @Autowired
     private UserController userController;
 
-    private static final User testUserInDatabase = new User(1, "John", "Doe", "213213@gmasil.com", null, new ArrayList<Order>());
+
+    private static final User testUserInDatabase = new User(1, "John", "Doe", "213213@gmasil.com", new Basket(), new ArrayList<Order>());
+
+
+
     @BeforeAll
     public void beforeTests(){
         if (userService.findAll().size() > 0){
@@ -73,7 +76,6 @@ class UserControllerTests {
 
     @Test
     void testGetUserByNameWhenUsersExist() {
-//        List<User> myUser = userService.findByName("John");
         ResponseEntity<List<User>> response = userController.getUserByName("John");
         assertEquals(testUserInDatabase, Objects.requireNonNull(response.getBody()).get(0));
         assertEquals(HttpStatus.OK,response.getStatusCode(),"Status 200");
@@ -103,7 +105,13 @@ class UserControllerTests {
     }
 
    }
-
+   @Test
+    void testAddToBasket(){
+        Product product = new Product("iPhone X" , Category.PHONE);
+        int quantity = 2;
+        ResponseEntity<HttpStatus> response = userController.addToBasket(product,quantity,testUserInDatabase.getId());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+   }
 }
 
 

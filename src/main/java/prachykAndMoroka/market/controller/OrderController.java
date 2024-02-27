@@ -11,16 +11,18 @@ import prachykAndMoroka.market.service.OrderService;
 @RestController("/order")
 public class OrderController {
     private final OrderService orderService;
+
     @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
+
     @PutMapping("/{id}/status")
-    public ResponseEntity<Order> updateStatus(@PathVariable int id, @RequestParam OrderStatus orderStatus){
+    public ResponseEntity<Order> updateStatus(@PathVariable int id, @RequestParam OrderStatus orderStatus) {
         try {
-            orderService.updateOrderStatus(id,orderStatus);
+            orderService.updateOrderStatus(id, orderStatus);
             return ResponseEntity.ok().build();
-        }catch (NullPointerException exception){
+        } catch (NullPointerException exception) {
             return ResponseEntity.notFound().build();
         }
 

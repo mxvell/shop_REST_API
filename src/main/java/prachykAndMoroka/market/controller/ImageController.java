@@ -16,13 +16,14 @@ import java.io.ByteArrayInputStream;
 @RestController
 public class ImageController {
     private final ImageService imageService;
+
     @Autowired
     public ImageController(ImageService imageService) {
         this.imageService = imageService;
     }
 
     @GetMapping("/images/{id}")
-    private ResponseEntity<?> getImageById(@PathVariable Long id){
+    private ResponseEntity<?> getImageById(@PathVariable Long id) {
         Image image = imageService.findById(id);
         return ResponseEntity.ok()
                 .header("fileName", image.getOriginalFileName())

@@ -20,22 +20,13 @@ public class Image {
     @Column(name = "isPreviewImage")
     private boolean isPreviewImage;
     @Lob
-    private byte [] bytes;
-    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
-    private Product product;
+    private byte[] bytes;
+
+    //    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+//    private Product product;
     public Image() {
     }
 
-    public Image(Long id, String name, String originalFileName, Long size, String contentType, boolean isPreviewImage, byte[] bytes, Product product) {
-        this.id = id;
-        this.name = name;
-        this.originalFileName = originalFileName;
-        this.size = size;
-        this.contentType = contentType;
-        this.isPreviewImage = isPreviewImage;
-        this.bytes = bytes;
-        this.product = product;
-    }
 
     public Long getId() {
         return id;
@@ -93,11 +84,4 @@ public class Image {
         this.bytes = bytes;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
 }
