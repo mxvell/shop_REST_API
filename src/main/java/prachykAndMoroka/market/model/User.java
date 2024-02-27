@@ -22,7 +22,8 @@ public class User {
     private String email;
 
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "basket_id", referencedColumnName = "id")
     private Basket basket;
     @OneToMany(mappedBy = "user_id", fetch = FetchType.EAGER)
     private List<Order> orders;

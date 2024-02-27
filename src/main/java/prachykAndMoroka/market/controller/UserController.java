@@ -85,7 +85,7 @@ public class UserController {
     @PostMapping("/basket/add")
     public ResponseEntity<HttpStatus> addToBasket(@RequestBody Product products, @RequestParam int quantity, @RequestParam int id) {
         User user = userService.findById(id);
-        Basket basket = new Basket();
+//        Basket basket = new Basket();
         user.addProductToBasket(products, quantity);
         userService.saveUser(user);
         return ResponseEntity.ok(HttpStatus.CREATED);

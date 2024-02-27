@@ -10,10 +10,10 @@ public class Basket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @OneToOne
-    @JoinColumn(name = "basket_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "basket")
     private User user;
     @OneToMany
+    //TODO: доделать связь
     private List<Product> products;
     private int quantity;
 
