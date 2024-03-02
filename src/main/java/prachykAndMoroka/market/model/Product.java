@@ -12,13 +12,12 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "product", schema = "public")
-@Component
 public class Product {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    private int id;
+    private Long id;
     @Column(name = "name")
     @JsonProperty("name")
     private String name;
@@ -26,6 +25,9 @@ public class Product {
     @JsonProperty("category")
     @Enumerated(EnumType.STRING)
     private Category category;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "basket_id",referencedColumnName = "id")
+    private Basket productInBasket;
     //    @OneToMany(mappedBy = "product_id")
 //    private List<Order> orders;
 //    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "product")
@@ -42,9 +44,22 @@ public class Product {
         this.category = categories;
     }
 
-    public Product(int id, String name, Category laptop) {
+    public Product(String name, double price, Category category) {
+        this.name = name;
+        this.price = price;
+        this.category = category;
+    }
+
+    public Product(Long id, String name, Category category) {
         this.id = id;
         this.name = name;
+        this.category = category;
+    }
+
+    public Product(Long id, String name, double price, Category laptop) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
         this.category = laptop;
     }
     //    public void addImageToProduct(Image image) {
@@ -60,6 +75,14 @@ public class Product {
 //        this.images = images;
 //    }
 
+    public Basket getProductInBasket() {
+        return productInBasket;
+    }
+
+    public void setProductInBasket(Basket productInBasket) {
+        this.productInBasket = productInBasket;
+    }
+
     public Long getPreviewImageId() {
         return previewImageId;
     }
@@ -68,11 +91,11 @@ public class Product {
         this.previewImageId = previewImageId;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

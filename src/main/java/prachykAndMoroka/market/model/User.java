@@ -13,7 +13,7 @@ public class User {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @Column(name = "name")
     private String name;
     @Column(name = "surname")
@@ -22,7 +22,8 @@ public class User {
     private String email;
 
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "basket_id", referencedColumnName = "id")
     private Basket basket;
     @OneToMany(mappedBy = "user_id", fetch = FetchType.EAGER)
     private List<Order> orders;
@@ -39,7 +40,7 @@ public class User {
         this.orders = orders;
     }
 
-    public User(int id, String name, String surname, String email, Basket basket, List<Order> orders) {
+    public User(Long id, String name, String surname, String email, Basket basket, List<Order> orders) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -51,11 +52,11 @@ public class User {
     public void addProductToBasket(Product product, int quantity) {
         for (int i = 1; i < quantity; i++) {
             basket.getProducts().add(product);
-        }
 
+        }
     }
 
-    public void deleteProductFromBasketIndex(int index) {
+    public void deleteProductFromBasketIndex(long index) {
         if (!basket.getProducts().isEmpty()) {
             basket.deleteProductsByIndex(index);
         }
@@ -69,11 +70,11 @@ public class User {
         return basket.getTotalPrice(products);
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -102,17 +103,6 @@ public class User {
     }
 
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", email='" + email + '\'' +
-                ", basket=" + basket +
-                ", orders=" + orders +
-                '}';
-    }
 
     @Override
     public boolean equals(Object o) {

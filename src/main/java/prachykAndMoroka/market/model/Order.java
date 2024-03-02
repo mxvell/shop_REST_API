@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @ManyToOne
     private User user_id;
 //    @ManyToOne
@@ -17,17 +17,17 @@ public class Order {
     public Order() {
     }
 
-    public Order(int id, User user_id, OrderStatus orderStatus) {
+    public Order(Long id, User user_id, OrderStatus orderStatus) {
         this.id = id;
         this.user_id = user_id;
         this.orderStatus = OrderStatus.IN_PROGRESS;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

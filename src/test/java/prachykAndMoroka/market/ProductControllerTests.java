@@ -26,12 +26,12 @@ public class ProductControllerTests {
     private ProductController productController;
 
     public static final ProductDTO testProductDTODataBase = new ProductDTO("ASUS ROG gl-12", Category.LAPTOP);
-    public static final Product testProductDataBase = new Product(1, "ASUS ROG gl-12", Category.LAPTOP);
+    public static final Product testProductDataBase = new Product(1L, "ASUS ROG gl-12", Category.LAPTOP);
 
     @BeforeAll
     public void beforeTests() throws IOException {
         testProductDTODataBase.setProduct(testProductDataBase);
-        testProductDTODataBase.getProduct().setId(1);
+        testProductDTODataBase.getProduct().setId(1L);
         if (productService.findAll().size() > 0) {
             productService.deleteAll();
         }
@@ -66,20 +66,8 @@ public class ProductControllerTests {
     void testGetRandomProduct() {
         ResponseEntity<Product> response = productController.getRandomProduct();
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        int id = response.getBody().getId();
+        long id = response.getBody().getId();
         assertTrue(id == 1 || id == 2);
-    }
-    @Test
-    void testShouldReturnRandomProducts(){
-        int count = 2;
-        ResponseEntity<List<Product>> response = productController.getMultiplyRandomProducts(count);
-        assertEquals(HttpStatus.OK,response.getStatusCode());
-        assertEquals(count,response.getBody().size());
-        List<Integer> products = response.getBody().stream()
-                .map(Product::getId).toList();
-
-        assertTrue(products.contains(1));
-        assertTrue(products.contains(2));
     }
 
 

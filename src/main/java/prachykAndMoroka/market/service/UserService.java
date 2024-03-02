@@ -23,7 +23,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findById(int id) {
+    public User findById(long id) {
         Optional<User> foundUser = userRepository.findById(id);
         return foundUser.orElse(null);
     }
@@ -42,13 +42,13 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(int id, User updUser) {
+    public void updateUser(long id, User updUser) {
         updUser.setId(id);
         userRepository.save(updUser);
     }
 
     @Transactional
-    public void delete(int id) {
+    public void delete(long id) {
         userRepository.deleteById(id);
     }
 

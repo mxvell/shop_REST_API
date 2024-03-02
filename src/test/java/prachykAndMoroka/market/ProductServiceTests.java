@@ -24,12 +24,12 @@ public class ProductServiceTests {
     private ProductService productService;
 
     public static final ProductDTO testProductDTODataBase = new ProductDTO("ASUS ROG gl-12",Category.LAPTOP);
-    public static final Product testProductDataBase = new Product(1,"ASUS ROG gl-12",Category.LAPTOP );
+    public static final Product testProductDataBase = new Product(1L,"ASUS ROG gl-12",Category.LAPTOP );
 
     @BeforeAll
     public void beforeTests() throws IOException {
         testProductDTODataBase.setProduct(testProductDataBase);
-        testProductDTODataBase.getProduct().setId(1);
+        testProductDTODataBase.getProduct().setId(1L);
         if (productService.findAll().size() > 0) {
             productService.deleteAll();
         }

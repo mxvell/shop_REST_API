@@ -3,17 +3,18 @@ package prachykAndMoroka.market.model;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "basket", schema = "public")
 public class Basket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @OneToOne
-    @JoinColumn(name = "basket_id", referencedColumnName = "id")
+    private Long id;
+
+    @OneToOne(mappedBy = "basket")
     private User user;
-    @OneToMany
+    @OneToMany(mappedBy = "productInBasket",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Product> products;
     private int quantity;
 
@@ -29,7 +30,7 @@ public class Basket {
         return products;
     }
 
-    public void deleteProductsByIndex(int index) {
+    public void deleteProductsByIndex(long index) {
         if (products.size() > index) {
             products.remove(index);
         }
@@ -65,11 +66,11 @@ public class Basket {
         this.user = user;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -79,5 +80,19 @@ public class Basket {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Basket)) return false;
+        Basket basket = (Basket) o;
+        return id == basket.id && quantity == basket.quantity && user.equals(basket.user) && products.equals(basket.products);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, user, products, quantity);
     }
 }

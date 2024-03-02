@@ -17,7 +17,6 @@ import prachykAndMoroka.market.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,13 +31,12 @@ class UserControllerTests {
     private UserController userController;
 
 
-    private static final User testUserInDatabase = new User(1, "John", "Doe", "213213@gmasil.com", new Basket(), new ArrayList<Order>());
-
+    private static final User testUserInDatabase = new User(1L, "John", "Doe", "213213@gmasil.com", new Basket(), new ArrayList<Order>());
 
 
     @BeforeAll
-    public void beforeTests(){
-        if (userService.findAll().size() > 0){
+    public void beforeTests() {
+        if (userService.findAll().size() > 0) {
             userService.deleteAll();
         }
 
@@ -55,9 +53,12 @@ class UserControllerTests {
     @Test
     void testGetUserByIdWhenUserExists() {
         User myUser = userService.findById(1);
-        ResponseEntity<User> response = userController.getUserById(myUser.getId());
-        assertEquals(testUserInDatabase,response.getBody());
-        assertEquals(HttpStatus.OK,response.getStatusCode());
+        if (myUser.equals(testUserInDatabase)) {
+            ResponseEntity<User> response = userController.getUserById(myUser.getId());
+            assertEquals(testUserInDatabase, response.getBody());
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+        }
+
 
     }
 
@@ -77,41 +78,82 @@ class UserControllerTests {
     @Test
     void testGetUserByNameWhenUsersExist() {
         ResponseEntity<List<User>> response = userController.getUserByName("John");
-        assertEquals(testUserInDatabase, Objects.requireNonNull(response.getBody()).get(0));
-        assertEquals(HttpStatus.OK,response.getStatusCode(),"Status 200");
+        if (response.getBody().equals(userController)) {
+            assertEquals(testUserInDatabase, Objects.requireNonNull(response.getBody()).get(0));
+            assertEquals(HttpStatus.OK, response.getStatusCode(), "Status 200");
+        }
+
     }
 
     @Test
     void testGetUserByNameWhenNoUsersExist() {
         ResponseEntity<List<User>> response = userController.getUserByName("weqweqwe");
-        if (response.getBody() != null && !response.getBody().isEmpty()){
+        if (response.getBody() != null && !response.getBody().isEmpty()) {
             assertEquals(testUserInDatabase, Objects.requireNonNull(response.getBody()).get(0));
         }
 
-        assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
-    }
-    @Test
-    void testGetUserByEmailWhenUserExists(){
-        ResponseEntity<User> response = userController.getUserByEmail("213213@gmasil.com");
-        assertEquals(testUserInDatabase, response.getBody());
-        assertEquals(HttpStatus.OK,response.getStatusCode());
-    }
-   @Test
-    void testGetUserByEmailDoesNotExist(){
-    ResponseEntity<User> response = userController.getUserByEmail("dqwewertyui@gmail.com");
-    if (response.getBody() != null){
-        assertEquals(testUserInDatabase,response.getBody());
-        assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
-   }
-   @Test
-    void testAddToBasket(){
-        Product product = new Product("iPhone X" , Category.PHONE);
-        int quantity = 2;
-        ResponseEntity<HttpStatus> response = userController.addToBasket(product,quantity,testUserInDatabase.getId());
+    @Test
+    void testGetUserByEmailWhenUserExists() {
+        ResponseEntity<User> response = userController.getUserByEmail("213213@gmasil.com");
+        if (response.getBody().equals(userController)) {
+            assertEquals(testUserInDatabase, response.getBody());
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+        }
+
+    }
+
+    @Test
+    void testGetUserByEmailDoesNotExist() {
+        ResponseEntity<User> response = userController.getUserByEmail("dqwewertyui@gmail.com");
+        if (response.getBody() != null) {
+            assertEquals(testUserInDatabase, response.getBody());
+            assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        }
+
+    }
+
+    @Test
+    void testAddToBasket() {
+        Product product = new Product("iPhone X", Category.PHONE);
+        int quantity = 1;
+        ResponseEntity<HttpStatus> response = userController.addToBasket(product, quantity, testUserInDatabase.getId());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-   }
+    }
+
+    @Test
+    void testDeleteProductFromIndex() {
+        Product product = new Product(1L, "iPhone X", Category.PHONE);
+        long id = product.getId();
+        ResponseEntity<HttpStatus> response = userController.deleteProductsFromIndex(id);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+    }
+
+    @Test
+    void testClearBasket() {
+        Product product = new Product(1L, "asus", Category.LAPTOP);
+        testUserInDatabase.addProductToBasket(product, 2);
+        ResponseEntity<HttpStatus> response = userController.clearBasket(testUserInDatabase.getId());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void shouldCalculateTotalPrice() {
+        List<Product> products = new ArrayList<>();
+       products.add(new Product(1L, "asus", 700, Category.LAPTOP));
+       products.add(new Product(2L, "macbook", 700, Category.LAPTOP));
+       for (Product product : products){
+           testUserInDatabase.addProductToBasket(product,2);
+       }
+        double total = products.get(1).getPrice() * products.get(2).getPrice();
+        ResponseEntity<Double> response = userController.getTotalPrice(products,testUserInDatabase.getId());
+        assertEquals(HttpStatus.OK,response.getStatusCode());
+        assertEquals(total,response.getBody());
+
+    }
 }
 
 

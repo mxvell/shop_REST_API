@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import prachykAndMoroka.market.model.Basket;
 import prachykAndMoroka.market.model.Order;
 import prachykAndMoroka.market.model.User;
 import prachykAndMoroka.market.service.UserService;
@@ -22,7 +23,7 @@ class UserServiceTests {
     @Autowired
     private UserService userService;
 
-    private static final User testUserInDatabase = new User(1, "John", "Doe", "213213@gmasil.com", null, new ArrayList<Order>());
+    private static final User testUserInDatabase = new User(1L, "John", "Doe", "213213@gmasil.com", new Basket(), new ArrayList<Order>());
 
     @BeforeAll
     public void beforeTests() {

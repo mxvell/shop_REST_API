@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) {
+    public ResponseEntity<User> getUserById(@PathVariable long id) {
         User user = userService.findById(id);
         if (user != null) {
             return ResponseEntity.ok(user);
@@ -71,28 +71,27 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> updateUser(@PathVariable int id, @RequestBody User user) {
+    public ResponseEntity<HttpStatus> updateUser(@PathVariable long id, @RequestBody User user) {
         userService.updateUser(id, user);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable int id) {
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable long id) {
         userService.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PostMapping("/basket/add")
-    public ResponseEntity<HttpStatus> addToBasket(@RequestBody Product products, @RequestParam int quantity, @RequestParam int id) {
+    public ResponseEntity<HttpStatus> addToBasket(@RequestBody Product products, @RequestParam int quantity, @RequestParam long id) {
         User user = userService.findById(id);
-        Basket basket = new Basket();
         user.addProductToBasket(products, quantity);
         userService.saveUser(user);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/basket/delete{id}")
-    public ResponseEntity<HttpStatus> deleteProductsFromIndex(@PathVariable int id) {
+    public ResponseEntity<HttpStatus> deleteProductsFromIndex(@PathVariable long id) {
         User user = userService.findById(id);
         user.deleteProductFromBasketIndex(id);
         userService.saveUser(user);
@@ -100,7 +99,7 @@ public class UserController {
     }
 
     @DeleteMapping("/basket/deleteAll")
-    public ResponseEntity<HttpStatus> clearBasket(@RequestParam int id) {
+    public ResponseEntity<HttpStatus> clearBasket(@RequestParam long id) {
         User user = userService.findById(id);
         user.deleteAllProductsFromBasket();
         userService.saveUser(user);
@@ -108,7 +107,7 @@ public class UserController {
     }
 
     @GetMapping("/basket/total{id}")
-    public ResponseEntity<Double> getTotalPrice(@RequestParam List<Product> products, @PathVariable int id) {
+    public ResponseEntity<Double> getTotalPrice(@RequestParam List<Product> products, @PathVariable long id) {
         User user = userService.findById(id);
         user.getTotalPriceInBasket(products);
         userService.saveUser(user);
