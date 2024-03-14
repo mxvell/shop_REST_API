@@ -2,9 +2,15 @@ package prachykAndMoroka.market.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.deser.std.ObjectArrayDeserializer;
 import jakarta.persistence.*;
+import org.springframework.core.serializer.Deserializer;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.beans.Customizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,15 +31,14 @@ public class Product {
     @JsonProperty("category")
     @Enumerated(EnumType.STRING)
     private Category category;
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "basket_id",referencedColumnName = "id")
+    @JoinColumn(name = "basket_id", referencedColumnName = "id")
     private Basket productInBasket;
-    //    @OneToMany(mappedBy = "product_id")
-//    private List<Order> orders;
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "product")
-//
-//    private List<Image> images = new ArrayList<>();
-    private Long previewImageId;
+    @OneToMany(mappedBy = "productId",cascade = CascadeType.ALL)
+    private List<Order> orders;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+    private List<Image> images = new ArrayList<>();
 
 
     public Product() {
@@ -62,18 +67,31 @@ public class Product {
         this.price = price;
         this.category = laptop;
     }
-    //    public void addImageToProduct(Image image) {
-//        image.setProduct(this);
-//        images.add(image);
-//    }
 
-//    public List<Image> getImages() {
-//        return images;
-//    }
-//
-//    public void setImages(List<Image> images) {
-//        this.images = images;
-//    }
+    public Product(Long id, String name, double price, Category category, Basket productInBasket) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.category = category;
+        this.productInBasket = productInBasket;
+    }
+
+    public Product(String name, double price, Category category, Basket productInBasket, List<Order> orders, List<Image> images) {
+        this.name = name;
+        this.price = price;
+        this.category = category;
+        this.productInBasket = productInBasket;
+        this.orders = orders;
+        this.images = images;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
 
     public Basket getProductInBasket() {
         return productInBasket;
@@ -83,13 +101,6 @@ public class Product {
         this.productInBasket = productInBasket;
     }
 
-    public Long getPreviewImageId() {
-        return previewImageId;
-    }
-
-    public void setPreviewImageId(Long previewImageId) {
-        this.previewImageId = previewImageId;
-    }
 
     public Long getId() {
         return id;
@@ -101,6 +112,14 @@ public class Product {
 
     public String getName() {
         return name;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     public void setName(String name) {

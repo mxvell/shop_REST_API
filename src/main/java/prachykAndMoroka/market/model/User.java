@@ -20,12 +20,10 @@ public class User {
     private String surname;
     @Column(name = "email")
     private String email;
-
-
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "basket_id", referencedColumnName = "id")
     private Basket basket;
-    @OneToMany(mappedBy = "user_id", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "userId")
     private List<Order> orders;
 
     public User() {

@@ -55,22 +55,14 @@ public class ProductService {
         product.setName(productSaved.getName());
         product.setCategory(productSaved.getProduct().getCategory());
         product.setPrice(productSaved.getPrice());
+        product.setProductInBasket(productSaved.getProduct().getProductInBasket());
+        product.setOrders(productSaved.getProduct().getOrders());
         productRepository.save(product);
     }
 
 
-    private Image toImageEntity(MultipartFile file) throws IOException {
-        Image image = new Image();
-        image.setName(file.getName());
-        image.setOriginalFileName(file.getOriginalFilename());
-        image.setContentType(file.getContentType());
-        image.setSize(file.getSize());
-        image.setBytes(file.getBytes());
-        return image;
-    }
-
     /**
-     *
+     *This method upd product's data
      * @param id
      * @param updProduct
      */

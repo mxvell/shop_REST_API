@@ -91,9 +91,9 @@ public class UserController {
     }
 
     @DeleteMapping("/basket/delete{id}")
-    public ResponseEntity<HttpStatus> deleteProductsFromIndex(@PathVariable long id) {
-        User user = userService.findById(id);
-        user.deleteProductFromBasketIndex(id);
+    public ResponseEntity<HttpStatus> deleteProductsFromIndex(@PathVariable long user_id, @PathVariable long product_id ) {
+        User user = userService.findById(user_id);
+        user.deleteProductFromBasketIndex(product_id);
         userService.saveUser(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }

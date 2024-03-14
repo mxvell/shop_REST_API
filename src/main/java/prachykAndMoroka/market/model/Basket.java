@@ -2,6 +2,8 @@ package prachykAndMoroka.market.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,6 +18,7 @@ public class Basket {
     private User user;
     @OneToMany(mappedBy = "productInBasket",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Product> products;
+    @Column(name = "quantity")
     private int quantity;
 
     public Basket() {
@@ -27,7 +30,10 @@ public class Basket {
     }
 
     public List<Product> getProducts() {
-        return products;
+        if (products == null){
+            products = new LinkedList<>();
+        }
+          return products;
     }
 
     public void deleteProductsByIndex(long index) {

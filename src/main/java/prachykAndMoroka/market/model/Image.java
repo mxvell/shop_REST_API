@@ -7,26 +7,36 @@ import jakarta.persistence.*;
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
-    @Column(name = "name")
-    private String name;
-    @Column(name = "originalFileName")
-    private String originalFileName;
-    @Column(name = "size")
-    private Long size;
-    @Column(name = "contentType")
-    private String contentType;
-    @Column(name = "isPreviewImage")
-    private boolean isPreviewImage;
     @Lob
-    private byte[] bytes;
+    private byte[] data;
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 
-    //    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
-//    private Product product;
     public Image() {
     }
 
+    public Image(byte[] data, Product product) {
+        this.data = data;
+        this.product = product;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
     public Long getId() {
         return id;
@@ -36,52 +46,5 @@ public class Image {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getOriginalFileName() {
-        return originalFileName;
-    }
-
-    public void setOriginalFileName(String originalFileName) {
-        this.originalFileName = originalFileName;
-    }
-
-    public Long getSize() {
-        return size;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    public boolean isPreviewImage() {
-        return isPreviewImage;
-    }
-
-    public void setPreviewImage(boolean previewImage) {
-        isPreviewImage = previewImage;
-    }
-
-    public byte[] getBytes() {
-        return bytes;
-    }
-
-    public void setBytes(byte[] bytes) {
-        this.bytes = bytes;
-    }
 
 }

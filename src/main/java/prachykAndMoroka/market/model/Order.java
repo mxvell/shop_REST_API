@@ -8,18 +8,19 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    private User user_id;
-//    @ManyToOne
-//    private Product product_id;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    private User userId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Product productId;
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
     public Order() {
     }
 
-    public Order(Long id, User user_id, OrderStatus orderStatus) {
+    public Order(Long id, User userId, OrderStatus orderStatus) {
         this.id = id;
-        this.user_id = user_id;
+        this.userId = userId;
         this.orderStatus = OrderStatus.IN_PROGRESS;
     }
 
@@ -39,17 +40,24 @@ public class Order {
         this.orderStatus = orderStatus;
     }
 
-    public Order(User user_id) {
-        this.user_id = user_id;
+    public Order(User userId) {
+        this.userId = userId;
     }
 
 
-    public User getUser_id() {
-        return user_id;
+    public User getUserId() {
+        return userId;
     }
 
-    public void setUser_id(User user_id) {
-        this.user_id = user_id;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
+    public Product getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Product productId) {
+        this.productId = productId;
+    }
 }

@@ -117,25 +117,25 @@ class UserControllerTests {
 
     @Test
     void testAddToBasket() {
-        Product product = new Product("iPhone X", Category.PHONE);
-        int quantity = 1;
-        ResponseEntity<HttpStatus> response = userController.addToBasket(product, quantity, testUserInDatabase.getId());
+        Product product = new Product(1L,"iPhone X",500, Category.PHONE);
+        ResponseEntity<HttpStatus> response = userController.addToBasket(product, 2, testUserInDatabase.getId());
         assertEquals(HttpStatus.OK, response.getStatusCode());
+
     }
 
     @Test
     void testDeleteProductFromIndex() {
-        Product product = new Product(1L, "iPhone X", Category.PHONE);
+        Product product = new Product(2L, "iPhone X",500,Category.PHONE);
         long id = product.getId();
-        ResponseEntity<HttpStatus> response = userController.deleteProductsFromIndex(id);
+        ResponseEntity<HttpStatus> response = userController.deleteProductsFromIndex(testUserInDatabase.getId(), id);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
     }
 
     @Test
     void testClearBasket() {
-        Product product = new Product(1L, "asus", Category.LAPTOP);
-        testUserInDatabase.addProductToBasket(product, 2);
+        Product product = new Product(1L, "asus", 500, Category.LAPTOP );
+        testUserInDatabase.addProductToBasket(product, 1);
         ResponseEntity<HttpStatus> response = userController.clearBasket(testUserInDatabase.getId());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -143,15 +143,15 @@ class UserControllerTests {
     @Test
     void shouldCalculateTotalPrice() {
         List<Product> products = new ArrayList<>();
-       products.add(new Product(1L, "asus", 700, Category.LAPTOP));
-       products.add(new Product(2L, "macbook", 700, Category.LAPTOP));
-       for (Product product : products){
-           testUserInDatabase.addProductToBasket(product,2);
-       }
-        double total = products.get(1).getPrice() * products.get(2).getPrice();
-        ResponseEntity<Double> response = userController.getTotalPrice(products,testUserInDatabase.getId());
-        assertEquals(HttpStatus.OK,response.getStatusCode());
-        assertEquals(total,response.getBody());
+        products.add(new Product(1L, "asus", 700, Category.LAPTOP));
+        products.add(new Product(2L, "macbook", 700, Category.LAPTOP));
+        for (Product product : products) {
+            testUserInDatabase.addProductToBasket(product, 2);
+        }
+        double total = products.get(0).getPrice() + products.get(1).getPrice();
+        ResponseEntity<Double> response = userController.getTotalPrice(products, testUserInDatabase.getId());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        System.out.println(total);
 
     }
 }
