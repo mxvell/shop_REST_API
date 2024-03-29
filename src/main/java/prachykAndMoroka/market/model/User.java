@@ -1,12 +1,11 @@
 package prachykAndMoroka.market.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
 
-@Component
 @Entity
 @Table(name = "user", schema = "public")
 public class User {
@@ -23,6 +22,7 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "basket_id", referencedColumnName = "id")
     private Basket basket;
+    @JsonIgnore
     @OneToMany(mappedBy = "userId")
     private List<Order> orders;
 
@@ -66,6 +66,22 @@ public class User {
 
     public double getTotalPriceInBasket(List<Product> products) {
         return basket.getTotalPrice(products);
+    }
+
+    public Basket getBasket() {
+        return basket;
+    }
+
+    public void setBasket(Basket basket) {
+        this.basket = basket;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     public Long getId() {

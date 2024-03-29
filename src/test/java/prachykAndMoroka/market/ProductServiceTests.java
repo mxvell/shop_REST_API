@@ -43,12 +43,12 @@ public class ProductServiceTests {
 
     @Test
     void testFindByIdWhenProductExists() {
-        Product myProduct = productService.findById(1);
+        Product myProduct = productService.findById(1L);
         assertEquals(testProductDTODataBase.getProduct(),myProduct);
     }
     @Test
     void testFindByIdWhenProductDoesNotExist(){
-        Product notExistProduct = productService.findById(2);
+        Product notExistProduct = productService.findById(2L);
         assertNotEquals(testProductDTODataBase.getProduct(),notExistProduct);
     }
 

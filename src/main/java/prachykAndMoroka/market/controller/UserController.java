@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import prachykAndMoroka.market.dto.UserDTO;
-import prachykAndMoroka.market.model.Basket;
 import prachykAndMoroka.market.model.Product;
 import prachykAndMoroka.market.model.User;
 import prachykAndMoroka.market.service.UserService;
@@ -33,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable long id) {
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
         User user = userService.findById(id);
         if (user != null) {
             return ResponseEntity.ok(user);
@@ -66,40 +65,40 @@ public class UserController {
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
-    public User convertToUser(UserDTO userDTO) {
+    private User convertToUser(UserDTO userDTO) {
         return modelMapper.map(userDTO, User.class);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> updateUser(@PathVariable long id, @RequestBody User user) {
+    public ResponseEntity<HttpStatus> updateUser(@PathVariable Long id, @RequestBody User user) {
         userService.updateUser(id, user);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable long id) {
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PostMapping("/basket/add")
-    public ResponseEntity<HttpStatus> addToBasket(@RequestBody Product products, @RequestParam int quantity, @RequestParam long id) {
+    public ResponseEntity<HttpStatus> addToBasket(@RequestBody Product productId, @RequestParam int quantity, @RequestParam Long id) {
         User user = userService.findById(id);
-        user.addProductToBasket(products, quantity);
+        user.addProductToBasket(productId, quantity);
         userService.saveUser(user);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/basket/delete{id}")
-    public ResponseEntity<HttpStatus> deleteProductsFromIndex(@PathVariable long user_id, @PathVariable long product_id ) {
-        User user = userService.findById(user_id);
-        user.deleteProductFromBasketIndex(product_id);
+    @DeleteMapping("/basket/delete/{id}")
+    public ResponseEntity<HttpStatus> deleteProductsFromIndex(@PathVariable Long userId, @PathVariable Long productId ) {
+        User user = userService.findById(userId);
+        user.deleteProductFromBasketIndex(productId);
         userService.saveUser(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @DeleteMapping("/basket/deleteAll")
-    public ResponseEntity<HttpStatus> clearBasket(@RequestParam long id) {
+    public ResponseEntity<HttpStatus> clearBasket(@RequestParam Long id) {
         User user = userService.findById(id);
         user.deleteAllProductsFromBasket();
         userService.saveUser(user);
@@ -107,7 +106,7 @@ public class UserController {
     }
 
     @GetMapping("/basket/total{id}")
-    public ResponseEntity<Double> getTotalPrice(@RequestParam List<Product> products, @PathVariable long id) {
+    public ResponseEntity<Double> getTotalPrice(@RequestParam List<Product> products, @PathVariable Long id) {
         User user = userService.findById(id);
         user.getTotalPriceInBasket(products);
         userService.saveUser(user);

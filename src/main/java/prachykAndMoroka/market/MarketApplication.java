@@ -1,12 +1,19 @@
 package prachykAndMoroka.market;
 
-import com.fasterxml.jackson.databind.deser.std.ObjectArrayDeserializer;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+//import prachykAndMoroka.market.dto.BasketDTO;
+import prachykAndMoroka.market.model.Basket;
 import prachykAndMoroka.market.model.Product;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.lang.reflect.Type;
 
 
 @SpringBootApplication
@@ -14,11 +21,24 @@ import prachykAndMoroka.market.model.Product;
 @ComponentScan(basePackages = "prachykAndMoroka.market.service")
 public class MarketApplication {
 
-	public static void main(String[] args)  {
-		SpringApplication.run(MarketApplication.class, args);
-	}
-	@Bean
-	public ModelMapper modelMapper(){
-		return new ModelMapper();
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MarketApplication.class, args);
+
+//        Gson gson = new Gson();
+//
+//        try {
+//            FileReader reader = new FileReader("basket.json");
+//           Basket basket = gson.fromJson(reader, Basket.class);
+//            System.out.println(basket);
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
+
+
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 }

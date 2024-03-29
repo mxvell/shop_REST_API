@@ -29,7 +29,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product findById(long id) {
+    public Product findById(Long id) {
         Optional<Product> foundProduct = productRepository.findById(id);
         return foundProduct.orElse(null);
     }
@@ -67,13 +67,13 @@ public class ProductService {
      * @param updProduct
      */
     @Transactional
-    public void updateProduct(long id, Product updProduct) {
+    public void updateProduct(Long id, Product updProduct) {
         updProduct.setId(id);
         productRepository.save(updProduct);
     }
 
     @Transactional
-    public void deleteProduct(long id) {
+    public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 

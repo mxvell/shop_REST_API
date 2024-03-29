@@ -42,14 +42,14 @@ class UserServiceTests {
 
     @Test
     void testFindByIdWhenUserExists() {
-        User myUser = userService.findById(1);
+        User myUser = userService.findById(1L);
 
         assertEquals(testUserInDatabase, myUser);
     }
 
     @Test
     void testFindByIdWhenUserDoesNotExist() {
-      User myUser = userService.findById(2);
+      User myUser = userService.findById(2L);
       assertNotEquals(testUserInDatabase,myUser,"This user doesn't exist with this id");
     }
 

@@ -19,13 +19,13 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public Order findById(long id) {
+    public Order findById(Long id) {
         Optional<Order> order = orderRepository.findById(id);
         return order.orElse(null);
     }
 
     @Transactional
-    public void updateOrderStatus(long orderId, OrderStatus orderStatus) {
+    public void updateOrderStatus(Long orderId, OrderStatus orderStatus) {
         Order order = findById(orderId);
         if (order == null) {
             throw new NullPointerException("Order not found with id " + orderId);

@@ -45,7 +45,7 @@ public class ProductControllerTests {
 
     @Test
     void testGetProductByIdWhenExists() {
-        Product product = productService.findById(1);
+        Product product = productService.findById(1L);
         ResponseEntity<Product> response = productController.getProductById(product.getId());
         assertEquals(testProductDataBase, response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -53,7 +53,7 @@ public class ProductControllerTests {
 
     @Test
     void testGetProductByIdWhenDoesNotExist() {
-        Product notExistingProduct = productService.findById(2);
+        Product notExistingProduct = productService.findById(2L);
         if (notExistingProduct != null) {
             ResponseEntity<Product> response = productController.getProductById(notExistingProduct.getId());
             assertNotEquals(testProductDataBase, response.getBody());

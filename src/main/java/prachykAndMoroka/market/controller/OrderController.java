@@ -8,7 +8,8 @@ import prachykAndMoroka.market.model.Order;
 import prachykAndMoroka.market.model.OrderStatus;
 import prachykAndMoroka.market.service.OrderService;
 
-@RestController("/order")
+@RestController
+@RequestMapping("/order")
 public class OrderController {
     private final OrderService orderService;
 
@@ -17,13 +18,24 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getOrder(@PathVariable Long id) {
+
+        try {
+            Order order = orderService.findById(id);
+            return ResponseEntity.ok(order);
+        } catch (NullPointerException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PutMapping("/{id}/status")
-    public ResponseEntity<Order> updateStatus(@PathVariable long id, @RequestParam OrderStatus orderStatus) {
+    public ResponseEntity<Boolean> updateStatus(@PathVariable Long id, @RequestParam OrderStatus orderStatus) {
         try {
             orderService.updateOrderStatus(id, orderStatus);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(true);
         } catch (NullPointerException exception) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(false);
         }
 
     }

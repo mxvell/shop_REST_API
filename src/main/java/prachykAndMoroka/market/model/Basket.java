@@ -1,7 +1,14 @@
 package prachykAndMoroka.market.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.annotations.SerializedName;
 import jakarta.persistence.*;
 
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,31 +19,63 @@ import java.util.Objects;
 public class Basket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @SerializedName("id")
     private Long id;
 
     @OneToOne(mappedBy = "basket")
     private User user;
-    @OneToMany(mappedBy = "productInBasket",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    // TODO DELETE
+    @OneToMany(mappedBy = "productInBasket", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Product> products;
-    @Column(name = "quantity")
-    private int quantity;
+    @JsonRawValue
+    @Column(columnDefinition = "TEXT")
+    private String basketData;
+
+
+//    @Column(name = "quantity")
+//    private int quantity;
 
     public Basket() {
     }
 
-    public Basket(List<Product> products, int quantity) {
-        this.products = products;
-        this.quantity = quantity;
+
+//    public Basket(List<Product> products, int quantity) {
+//        this.products = products;
+//        this.quantity = quantity;
+//    }
+
+    public void addItem(Product product, int quantity) {
+        List<BasketItem> items = getItems();
+        items.add(new BasketItem(product.getId(), quantity));
+        setItems(items);
+
+    }
+
+    public List<BasketItem> getItems() {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(basketData, objectMapper.getTypeFactory().constructCollectionType(List.class, BasketItem.class));
+        } catch (JsonProcessingException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public void setItems(List<BasketItem> items) {
+        try {
+            basketData = new ObjectMapper().writeValueAsString(items);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error serializing basket data", e);
+        }
     }
 
     public List<Product> getProducts() {
-        if (products == null){
+        if (products == null) {
             products = new LinkedList<>();
         }
-          return products;
+        return products;
     }
 
-    public void deleteProductsByIndex(long index) {
+    public void deleteProductsByIndex(Long index) {
         if (products.size() > index) {
             products.remove(index);
         }
@@ -56,17 +95,12 @@ public class Basket {
         return total;
     }
 
+
     public void setProducts(List<Product> products) {
         this.products = products;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 
     public Basket(User user) {
         this.user = user;
@@ -88,17 +122,11 @@ public class Basket {
         this.user = user;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Basket)) return false;
-        Basket basket = (Basket) o;
-        return id == basket.id && quantity == basket.quantity && user.equals(basket.user) && products.equals(basket.products);
+    public String getBasketData() {
+        return basketData;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, user, products, quantity);
+    public void setBasketData(String basketData) {
+        this.basketData = basketData;
     }
 }

@@ -1,5 +1,8 @@
 package prachykAndMoroka.market.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,13 +11,16 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User userId;
-    @ManyToOne(cascade = CascadeType.ALL)
+
+    @ManyToOne
     private Product productId;
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+
     public Order() {
     }
 

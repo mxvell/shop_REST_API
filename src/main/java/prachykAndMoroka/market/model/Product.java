@@ -1,10 +1,13 @@
 package prachykAndMoroka.market.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.ObjectArrayDeserializer;
+import com.google.gson.annotations.SerializedName;
 import jakarta.persistence.*;
 import org.springframework.core.serializer.Deserializer;
 import org.springframework.stereotype.Component;
@@ -22,20 +25,24 @@ public class Product {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
+    @SerializedName("product_id")
     private Long id;
     @Column(name = "name")
     @JsonProperty("name")
     private String name;
     private double price;
+//    @SerializedName("quantity")
+//    private int quantity;
     @JsonProperty("category")
     @Enumerated(EnumType.STRING)
     private Category category;
+    // delete TODO
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "basket_id", referencedColumnName = "id")
     private Basket productInBasket;
-    @OneToMany(mappedBy = "productId",cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
     private List<Order> orders;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
     private List<Image> images = new ArrayList<>();
@@ -141,17 +148,22 @@ public class Product {
     public void setPrice(double price) {
         this.price = price;
     }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", category=" + category +
-                '}';
-    }
-
+//
+//    public int getQuantity() {
+//        return quantity;
+//    }
+//
+//    public void setQuantity(int quantity) {
+//        this.quantity = quantity;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "Product{" +
+//                "id=" + id +
+//                ", quantity=" + quantity +
+//                '}';
+//    }
 
     @Override
     public boolean equals(Object o) {

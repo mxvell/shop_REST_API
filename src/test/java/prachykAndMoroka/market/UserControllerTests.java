@@ -52,7 +52,7 @@ class UserControllerTests {
 
     @Test
     void testGetUserByIdWhenUserExists() {
-        User myUser = userService.findById(1);
+        User myUser = userService.findById(1L);
         if (myUser.equals(testUserInDatabase)) {
             ResponseEntity<User> response = userController.getUserById(myUser.getId());
             assertEquals(testUserInDatabase, response.getBody());
@@ -64,7 +64,7 @@ class UserControllerTests {
 
     @Test
     void testGetUserByIdDoesNotExist() {
-        User myUser = userService.findById(2);
+        User myUser = userService.findById(2L);
         if (myUser != null) {
             ResponseEntity<User> response = userController.getUserById(myUser.getId());
             assertEquals(testUserInDatabase, response.getBody());
