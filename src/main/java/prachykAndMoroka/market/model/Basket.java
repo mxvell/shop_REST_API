@@ -19,14 +19,11 @@ import java.util.Objects;
 public class Basket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @SerializedName("id")
     private Long id;
 
     @OneToOne(mappedBy = "basket")
     private User user;
-    // TODO DELETE
-    @OneToMany(mappedBy = "productInBasket", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Product> products;
+
     @JsonRawValue
     @Column(columnDefinition = "TEXT")
     private String basketData;

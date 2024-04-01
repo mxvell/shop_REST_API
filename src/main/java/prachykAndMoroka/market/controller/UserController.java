@@ -112,6 +112,16 @@ public class UserController {
         userService.saveUser(user);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/basket/{id}")
+    public ResponseEntity<List<Product>> getBasketProductsOfUser(@PathVariable Long id) {
+        List<Product> allProductsInBasket = userService.getAllProductsInBasket(id);
+        if (allProductsInBasket == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(allProductsInBasket, HttpStatus.OK);
+        }
+    }
 }
 
 

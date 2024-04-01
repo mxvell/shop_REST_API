@@ -34,11 +34,6 @@ public class Product {
     @JsonProperty("category")
     @Enumerated(EnumType.STRING)
     private Category category;
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "basket_id", referencedColumnName = "id")
-    private Basket productInBasket;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
     private List<Image> images = new ArrayList<>();
 
@@ -70,21 +65,6 @@ public class Product {
         this.category = laptop;
     }
 
-    public Product(Long id, String name, double price, Category category, Basket productInBasket) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.category = category;
-        this.productInBasket = productInBasket;
-    }
-    public Product(String name, double price, Category category, Basket productInBasket, List<Image> images) {
-        this.name = name;
-        this.price = price;
-        this.category = category;
-        this.productInBasket = productInBasket;
-        this.images = images;
-    }
-
 
     public List<Image> getImages() {
         return images;
@@ -92,14 +72,6 @@ public class Product {
 
     public void setImages(List<Image> images) {
         this.images = images;
-    }
-
-    public Basket getProductInBasket() {
-        return productInBasket;
-    }
-
-    public void setProductInBasket(Basket productInBasket) {
-        this.productInBasket = productInBasket;
     }
 
 
