@@ -1,11 +1,16 @@
 package prachykAndMoroka.market.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import prachykAndMoroka.market.manager.BasketProductManager;
+import prachykAndMoroka.market.model.Basket;
+import prachykAndMoroka.market.model.Product;
 import prachykAndMoroka.market.model.User;
 import prachykAndMoroka.market.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,10 +18,12 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+    private final BasketProductManager basketProductManager;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, BasketProductManager basketProductManager) {
         this.userRepository = userRepository;
+        this.basketProductManager = basketProductManager;
     }
 
     public List<User> findAll() {
@@ -54,5 +61,34 @@ public class UserService {
 
     public void deleteAll() {
         userRepository.deleteAll();
+    }
+
+    //TODO: replace null with exception throw
+    public List<Product> getAllProductsInBasket(long userId) {
+        User user = findById(userId);
+        if (user == null) {
+            return null;
+        }
+
+        Basket basket = user.getBasket();
+        if (basket == null) {
+            return null;
+        }
+
+        String basketData = basket.getBasketData();
+        //TODO add JSON validation
+        if (basket == null || basketData.length() == 0) {
+            return null;
+        }
+
+        List<Product> result = new ArrayList<>();
+        try {
+            result = basketProductManager.getAllProducts(basketData);
+        } catch (JsonProcessingException e) {
+            //TODO переделать
+            return null;
+        }
+
+        return result;
     }
 }

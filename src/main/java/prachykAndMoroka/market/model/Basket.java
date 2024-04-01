@@ -19,30 +19,19 @@ import java.util.Objects;
 public class Basket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @SerializedName("id")
     private Long id;
 
     @OneToOne(mappedBy = "basket")
     private User user;
-    // TODO DELETE
-    @OneToMany(mappedBy = "productInBasket", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Product> products;
+
     @JsonRawValue
     @Column(columnDefinition = "TEXT")
     private String basketData;
 
 
-//    @Column(name = "quantity")
-//    private int quantity;
-
     public Basket() {
     }
 
-
-//    public Basket(List<Product> products, int quantity) {
-//        this.products = products;
-//        this.quantity = quantity;
-//    }
 
     public void addItem(Product product, int quantity) {
         List<BasketItem> items = getItems();
@@ -69,22 +58,16 @@ public class Basket {
     }
 
     public List<Product> getProducts() {
-        if (products == null) {
-            products = new LinkedList<>();
-        }
-        return products;
+        //TODO: implement in controller and delete
+        return null;
     }
 
     public void deleteProductsByIndex(Long index) {
-        if (products.size() > index) {
-            products.remove(index);
-        }
+        //TODO: implement in controller and delete
     }
 
     public void deleteAllProducts() {
-        if (!products.isEmpty()) {
-            products.clear();
-        }
+       //TODO: implement in controller and delete
     }
 
     public double getTotalPrice(List<Product> products) {
@@ -97,9 +80,8 @@ public class Basket {
 
 
     public void setProducts(List<Product> products) {
-        this.products = products;
+        //TODO: implement in controller and delete
     }
-
 
 
     public Basket(User user) {

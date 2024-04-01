@@ -16,8 +16,7 @@ public class Order {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User userId;
 
-    @ManyToOne
-    private Product productId;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
@@ -59,11 +58,4 @@ public class Order {
         this.userId = userId;
     }
 
-    public Product getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Product productId) {
-        this.productId = productId;
-    }
 }

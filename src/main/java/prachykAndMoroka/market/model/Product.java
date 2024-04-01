@@ -31,19 +31,9 @@ public class Product {
     @JsonProperty("name")
     private String name;
     private double price;
-//    @SerializedName("quantity")
-//    private int quantity;
     @JsonProperty("category")
     @Enumerated(EnumType.STRING)
     private Category category;
-    // delete TODO
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "basket_id", referencedColumnName = "id")
-    private Basket productInBasket;
-    @JsonIgnore
-    @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
-    private List<Order> orders;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
     private List<Image> images = new ArrayList<>();
 
@@ -75,22 +65,6 @@ public class Product {
         this.category = laptop;
     }
 
-    public Product(Long id, String name, double price, Category category, Basket productInBasket) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.category = category;
-        this.productInBasket = productInBasket;
-    }
-
-    public Product(String name, double price, Category category, Basket productInBasket, List<Order> orders, List<Image> images) {
-        this.name = name;
-        this.price = price;
-        this.category = category;
-        this.productInBasket = productInBasket;
-        this.orders = orders;
-        this.images = images;
-    }
 
     public List<Image> getImages() {
         return images;
@@ -98,14 +72,6 @@ public class Product {
 
     public void setImages(List<Image> images) {
         this.images = images;
-    }
-
-    public Basket getProductInBasket() {
-        return productInBasket;
-    }
-
-    public void setProductInBasket(Basket productInBasket) {
-        this.productInBasket = productInBasket;
     }
 
 
@@ -121,13 +87,6 @@ public class Product {
         return name;
     }
 
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -148,22 +107,6 @@ public class Product {
     public void setPrice(double price) {
         this.price = price;
     }
-//
-//    public int getQuantity() {
-//        return quantity;
-//    }
-//
-//    public void setQuantity(int quantity) {
-//        this.quantity = quantity;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "Product{" +
-//                "id=" + id +
-//                ", quantity=" + quantity +
-//                '}';
-//    }
 
     @Override
     public boolean equals(Object o) {
