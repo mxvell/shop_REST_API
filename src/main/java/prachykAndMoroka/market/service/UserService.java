@@ -8,6 +8,7 @@ import prachykAndMoroka.market.manager.BasketProductManager;
 import prachykAndMoroka.market.model.Basket;
 import prachykAndMoroka.market.model.Product;
 import prachykAndMoroka.market.model.User;
+import prachykAndMoroka.market.repository.ProductRepository;
 import prachykAndMoroka.market.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -18,12 +19,14 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+    private final ProductService productService;
     private final BasketProductManager basketProductManager;
 
     @Autowired
-    public UserService(UserRepository userRepository, BasketProductManager basketProductManager) {
+    public UserService(UserRepository userRepository, BasketProductManager basketProductManager,ProductService productService) {
         this.userRepository = userRepository;
         this.basketProductManager = basketProductManager;
+        this.productService = productService;
     }
 
     public List<User> findAll() {
@@ -81,7 +84,7 @@ public class UserService {
             return null;
         }
 
-        List<Product> result = new ArrayList<>();
+        List<Product> result;
         try {
             result = basketProductManager.getAllProducts(basketData);
         } catch (JsonProcessingException e) {
@@ -90,5 +93,24 @@ public class UserService {
         }
 
         return result;
+    }
+    @Transactional
+    public void deleteProductByIndexInBasket(long userId,long productId) {
+        User user = findById(userId);
+        if (user == null) {
+            return;
+        }
+
+        Basket basket = user.getBasket();
+        if (basket == null) {
+            return;
+        }
+
+        String basketData = basket.getBasketData();
+        //TODO add JSON validation
+        if (basket == null || basketData.length() == 0) {
+            return;
+        }
+        basketProductManager.deleteProductWithId(productId);
     }
 }

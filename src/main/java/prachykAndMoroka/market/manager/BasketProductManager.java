@@ -3,6 +3,7 @@ package prachykAndMoroka.market.manager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.common.lang.Nullable;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import prachykAndMoroka.market.dto.ProductFromJsonDTO;
@@ -71,4 +72,13 @@ public class BasketProductManager {
 //
 //        return valid;
 //    }
+
+    public void deleteProductWithId(long id){
+       Product product = productService.findById(id);
+       if (product == null){
+           System.out.println("Not found product");
+       }else {
+           productService.deleteProduct(product.getId());
+       }
+    }
 }

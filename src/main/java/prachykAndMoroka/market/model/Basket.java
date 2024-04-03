@@ -37,7 +37,6 @@ public class Basket {
         List<BasketItem> items = getItems();
         items.add(new BasketItem(product.getId(), quantity));
         setItems(items);
-
     }
 
     public List<BasketItem> getItems() {
@@ -58,16 +57,16 @@ public class Basket {
     }
 
     public List<Product> getProducts() {
-        //TODO: implement in controller and delete
+        //TODO: implement in service and delete
         return null;
     }
 
     public void deleteProductsByIndex(Long index) {
-        //TODO: implement in controller and delete
+        //TODO: implement in service  and delete
     }
 
     public void deleteAllProducts() {
-       //TODO: implement in controller and delete
+       //TODO: implement in service and delete
     }
 
     public double getTotalPrice(List<Product> products) {
@@ -80,7 +79,7 @@ public class Basket {
 
 
     public void setProducts(List<Product> products) {
-        //TODO: implement in controller and delete
+        //TODO: implement in service and delete
     }
 
 

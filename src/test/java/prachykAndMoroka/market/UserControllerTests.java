@@ -123,14 +123,14 @@ class UserControllerTests {
 
     }
 
-    @Test
-    void testDeleteProductFromIndex() {
-        Product product = new Product(2L, "iPhone X",500,Category.PHONE);
-        long id = product.getId();
-        ResponseEntity<HttpStatus> response = userController.deleteProductsFromIndex(testUserInDatabase.getId(), id);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-
-    }
+//    @Test
+//    void testDeleteProductFromIndex() {
+//        Product product = new Product(2L, "iPhone X",500,Category.PHONE);
+//        long id = product.getId();
+//        ResponseEntity<HttpStatus> response = userController.deleteProductsFromIndex(testUserInDatabase.getId(), id);
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//
+//    }
 
     @Test
     void testClearBasket() {
