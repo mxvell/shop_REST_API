@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import prachykAndMoroka.market.dto.ProductFromJsonDTO;
 import prachykAndMoroka.market.dto.UserDTO;
 import prachykAndMoroka.market.model.Product;
 import prachykAndMoroka.market.model.User;
 import prachykAndMoroka.market.service.UserService;
+import prachykAndMoroka.market.utill.UserNotFoundException;
 
 import java.util.List;
 
@@ -80,7 +82,7 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
-
+    //TODO ПЕРЕРОБИТИ ЦЕЙ МЕТОД ВІН НЕ КОРЕКТНИЙ
     @PostMapping("/basket/add")
     public ResponseEntity<HttpStatus> addToBasket(@RequestBody Product productId, @RequestParam int quantity, @RequestParam Long id) {
         User user = userService.findById(id);
@@ -89,12 +91,12 @@ public class UserController {
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/basket/delete/{id}")
-    public ResponseEntity<HttpStatus> deleteProductsFromIndex(@PathVariable long userId, @PathVariable long productId ) {
-        userService.deleteProductByIndexInBasket(userId,productId);
+    @DeleteMapping("/basket/delete/{userId}/{productId}/{quantity}")
+    public ResponseEntity<HttpStatus> deleteProductsFromIndex(@PathVariable long userId, @PathVariable long productId, @PathVariable int quantity) {
+        userService.deleteProductByIndexInBasket(userId,productId,quantity);
         return ResponseEntity.ok(HttpStatus.OK);
     }
-
+    //TODO ПЕРЕРОБИТИ ЦЕЙ МЕТОД ВІН НЕ КОРЕКТНИЙ
     @DeleteMapping("/basket/deleteAll")
     public ResponseEntity<HttpStatus> clearBasket(@RequestParam Long id) {
         User user = userService.findById(id);
@@ -103,7 +105,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/basket/total{id}")
+    @GetMapping("/basket/total/{id}")
     public ResponseEntity<Double> getTotalPrice(@RequestParam List<Product> products, @PathVariable Long id) {
         User user = userService.findById(id);
         user.getTotalPriceInBasket(products);
@@ -112,8 +114,8 @@ public class UserController {
     }
 
     @GetMapping("/basket/{id}")
-    public ResponseEntity<List<Product>> getBasketProductsOfUser(@PathVariable Long id) {
-        List<Product> allProductsInBasket = userService.getAllProductsInBasket(id);
+    public ResponseEntity<List<ProductFromJsonDTO>> getBasketProductsOfUser(@PathVariable Long id) throws UserNotFoundException {
+        List<ProductFromJsonDTO> allProductsInBasket = userService.getAllProductsInBasket(id);
         if (allProductsInBasket == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

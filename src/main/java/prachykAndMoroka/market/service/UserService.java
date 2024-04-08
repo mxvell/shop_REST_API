@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import prachykAndMoroka.market.dto.ProductFromJsonDTO;
 import prachykAndMoroka.market.manager.BasketProductManager;
 import prachykAndMoroka.market.model.Basket;
 import prachykAndMoroka.market.model.Product;
 import prachykAndMoroka.market.model.User;
 import prachykAndMoroka.market.repository.ProductRepository;
 import prachykAndMoroka.market.repository.UserRepository;
+import prachykAndMoroka.market.utill.UserNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,7 @@ public class UserService {
     private final BasketProductManager basketProductManager;
 
     @Autowired
-    public UserService(UserRepository userRepository, BasketProductManager basketProductManager,ProductService productService) {
+    public UserService(UserRepository userRepository, BasketProductManager basketProductManager, ProductService productService) {
         this.userRepository = userRepository;
         this.basketProductManager = basketProductManager;
         this.productService = productService;
@@ -67,11 +69,11 @@ public class UserService {
     }
 
     //TODO: replace null with exception throw
-    public List<Product> getAllProductsInBasket(long userId) {
+    public List<ProductFromJsonDTO> getAllProductsInBasket(long userId) throws UserNotFoundException  {
         User user = findById(userId);
-        if (user == null) {
-            return null;
-        }
+            if (user == null){
+              throw new UserNotFoundException(userId);
+            }
 
         Basket basket = user.getBasket();
         if (basket == null) {
@@ -80,11 +82,11 @@ public class UserService {
 
         String basketData = basket.getBasketData();
         //TODO add JSON validation
-        if (basket == null || basketData.length() == 0) {
+        if (basketData == null || basketData.length() == 0) {
             return null;
         }
 
-        List<Product> result;
+        List<ProductFromJsonDTO> result;
         try {
             result = basketProductManager.getAllProducts(basketData);
         } catch (JsonProcessingException e) {
@@ -94,23 +96,31 @@ public class UserService {
 
         return result;
     }
+
     @Transactional
-    public void deleteProductByIndexInBasket(long userId,long productId) {
+    public void deleteProductByIndexInBasket(long userId, long productId, int quantity) {
         User user = findById(userId);
         if (user == null) {
-            return;
+            throw new RuntimeException("USER IS NULL");
         }
-
         Basket basket = user.getBasket();
         if (basket == null) {
-            return;
+            throw new RuntimeException("USER BASKET IS NULL");
+        }
+        String basketData = basket.getBasketData();
+        if (basketData == null || basketData.length() == 0) {
+            throw new RuntimeException("USER BASKET DATA IS NULL OR EMPTY");
         }
 
-        String basketData = basket.getBasketData();
-        //TODO add JSON validation
-        if (basket == null || basketData.length() == 0) {
-            return;
+        String updatedJson;
+        try {
+            List<ProductFromJsonDTO> updatedList = basketProductManager.deleteProductFromBasket(productId, quantity, basketData);
+            updatedJson = basketProductManager.generateJson(updatedList);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Paring error JSON");
         }
-        basketProductManager.deleteProductWithId(productId);
+        basket.setBasketData(updatedJson);
+        user.setBasket(basket);
+        userRepository.save(user);
     }
 }

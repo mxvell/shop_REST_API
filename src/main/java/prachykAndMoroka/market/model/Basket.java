@@ -32,30 +32,6 @@ public class Basket {
     public Basket() {
     }
 
-
-    public void addItem(Product product, int quantity) {
-        List<BasketItem> items = getItems();
-        items.add(new BasketItem(product.getId(), quantity));
-        setItems(items);
-    }
-
-    public List<BasketItem> getItems() {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(basketData, objectMapper.getTypeFactory().constructCollectionType(List.class, BasketItem.class));
-        } catch (JsonProcessingException e) {
-            return new ArrayList<>();
-        }
-    }
-
-    public void setItems(List<BasketItem> items) {
-        try {
-            basketData = new ObjectMapper().writeValueAsString(items);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error serializing basket data", e);
-        }
-    }
-
     public List<Product> getProducts() {
         //TODO: implement in service and delete
         return null;
@@ -66,7 +42,7 @@ public class Basket {
     }
 
     public void deleteAllProducts() {
-       //TODO: implement in service and delete
+        //TODO: implement in service and delete
     }
 
     public double getTotalPrice(List<Product> products) {

@@ -1,7 +1,7 @@
 package prachykAndMoroka.market.utill;
 
 public class UserNotFoundException extends Exception {
-     public String getMessage(){
-          return "This user doesn't exist";
-     }
+   public UserNotFoundException(long userId){
+       super("User with ID " + userId + " not found.");
+   }
 }

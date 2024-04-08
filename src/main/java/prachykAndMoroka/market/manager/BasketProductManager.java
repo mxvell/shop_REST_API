@@ -24,27 +24,13 @@ public class BasketProductManager {
         this.productService = productService;
     }
 
-    public List<Product> getAllProducts(String jsonStr) throws JsonProcessingException {
+    public List<ProductFromJsonDTO> getAllProducts(String jsonStr) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         List<ProductFromJsonDTO> jsonProductsList = mapper.readValue(jsonStr,
                 mapper.getTypeFactory().constructCollectionType(List.class, ProductFromJsonDTO.class)
         );
 
-        return extractMultipleProducts(jsonProductsList);
-    }
-
-    @Nullable
-    private List<Product> extractMultipleProducts(List<ProductFromJsonDTO> inputList) {
-        if (inputList == null) {
-            return null;
-        }
-
-        List<Product> resultList = new ArrayList<>();
-        for (ProductFromJsonDTO jsonDtoProduct : inputList) {
-            resultList.add(extractProduct(jsonDtoProduct));
-        }
-
-        return resultList;
+        return jsonProductsList;
     }
 
     /**
@@ -56,29 +42,26 @@ public class BasketProductManager {
         return productService.findById(productFromJsonDTO.getProductId());
     }
 
-//    public boolean isValidJSON(final String json) {
-//        boolean valid = false;
-//        try {
-//            final JsonParser parser = new ObjectMapper().getJsonFactory()
-//                    .createJsonParser(json);
-//            while (parser.nextToken() != null) {
-//            }
-//            valid = true;
-//        } catch (JsonParseException jpe) {
-//            jpe.printStackTrace();
-//        } catch (IOException ioe) {
-//            ioe.printStackTrace();
-//        }
-//
-//        return valid;
-//    }
 
-    public void deleteProductWithId(long id){
-       Product product = productService.findById(id);
-       if (product == null){
-           System.out.println("Not found product");
-       }else {
-           productService.deleteProduct(product.getId());
-       }
+    public List<ProductFromJsonDTO> deleteProductFromBasket(long productId, int quantity, String basketData) throws JsonProcessingException {
+        List<ProductFromJsonDTO> productList = getAllProducts(basketData);
+        for (ProductFromJsonDTO product : productList){
+              if (product.getProductId() == productId){
+                  int actualQty = product.getQuantity();
+                  int newQty = actualQty - quantity;
+                  if (newQty <= 0){
+                      productList.remove(product);
+                  }else {
+                      product.setQuantity(newQty);
+                  }
+                  break;
+              }
+        }
+        return productList;
+    }
+
+    public String generateJson(List<ProductFromJsonDTO> productList) throws JsonProcessingException{
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(productList);
     }
 }

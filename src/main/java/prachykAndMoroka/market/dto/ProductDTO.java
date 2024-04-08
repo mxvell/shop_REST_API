@@ -26,11 +26,8 @@ public class ProductDTO {
     @Min(15)
     @Max(40000)
     private double price;
-
     private Image image;
-
     private Category category;
-
 
     public ProductDTO() {
     }
