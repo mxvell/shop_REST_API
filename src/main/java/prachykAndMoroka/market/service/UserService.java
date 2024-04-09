@@ -1,5 +1,6 @@
 package prachykAndMoroka.market.service;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,13 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import prachykAndMoroka.market.dto.ProductFromJsonDTO;
 import prachykAndMoroka.market.manager.BasketProductManager;
 import prachykAndMoroka.market.model.Basket;
-import prachykAndMoroka.market.model.Product;
 import prachykAndMoroka.market.model.User;
-import prachykAndMoroka.market.repository.ProductRepository;
 import prachykAndMoroka.market.repository.UserRepository;
+import prachykAndMoroka.market.utill.JsonParsingException;
 import prachykAndMoroka.market.utill.UserNotFoundException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,15 +68,15 @@ public class UserService {
     }
 
     //TODO: replace null with exception throw
-    public List<ProductFromJsonDTO> getAllProductsInBasket(long userId) throws UserNotFoundException  {
+    public List<ProductFromJsonDTO> getAllProductsInBasket(long userId) throws UserNotFoundException, JsonParsingException {
         User user = findById(userId);
-            if (user == null){
-              throw new UserNotFoundException(userId);
-            }
+        if (user == null) {
+            throw new UserNotFoundException(userId);
+        }
 
         Basket basket = user.getBasket();
         if (basket == null) {
-            return null;
+            throw new NullPointerException("USER BASKET IS NULL");
         }
 
         String basketData = basket.getBasketData();
@@ -90,22 +89,21 @@ public class UserService {
         try {
             result = basketProductManager.getAllProducts(basketData);
         } catch (JsonProcessingException e) {
-            //TODO переделать
-            return null;
+            return (List<ProductFromJsonDTO>) new JsonParsingException("Error parsing basket data for user ",e);
         }
 
         return result;
     }
 
     @Transactional
-    public void deleteProductByIndexInBasket(long userId, long productId, int quantity) {
+    public void deleteProductByIndexInBasket(long userId, long productId, int quantity) throws UserNotFoundException {
         User user = findById(userId);
         if (user == null) {
-            throw new RuntimeException("USER IS NULL");
+            throw new UserNotFoundException(userId);
         }
         Basket basket = user.getBasket();
         if (basket == null) {
-            throw new RuntimeException("USER BASKET IS NULL");
+            throw new NullPointerException("USER BASKET IS NULL");
         }
         String basketData = basket.getBasketData();
         if (basketData == null || basketData.length() == 0) {
@@ -117,7 +115,7 @@ public class UserService {
             List<ProductFromJsonDTO> updatedList = basketProductManager.deleteProductFromBasket(productId, quantity, basketData);
             updatedJson = basketProductManager.generateJson(updatedList);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Paring error JSON");
+            throw new JsonParsingException("Error parsing basket data",e);
         }
         basket.setBasketData(updatedJson);
         user.setBasket(basket);

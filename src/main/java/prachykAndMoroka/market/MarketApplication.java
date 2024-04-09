@@ -23,18 +23,6 @@ public class MarketApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(MarketApplication.class, args);
-
-//        Gson gson = new Gson();
-//
-//        try {
-//            FileReader reader = new FileReader("basket.json");
-//           Basket basket = gson.fromJson(reader, Basket.class);
-//            System.out.println(basket);
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-
-
     }
 
     @Bean

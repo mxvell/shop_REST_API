@@ -92,7 +92,7 @@ public class UserController {
     }
 
     @DeleteMapping("/basket/delete/{userId}/{productId}/{quantity}")
-    public ResponseEntity<HttpStatus> deleteProductsFromIndex(@PathVariable long userId, @PathVariable long productId, @PathVariable int quantity) {
+    public ResponseEntity<HttpStatus> deleteProductsFromIndex(@PathVariable long userId, @PathVariable long productId, @PathVariable int quantity) throws UserNotFoundException{
         userService.deleteProductByIndexInBasket(userId,productId,quantity);
         return ResponseEntity.ok(HttpStatus.OK);
     }
