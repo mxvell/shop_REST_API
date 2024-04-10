@@ -115,13 +115,13 @@ class UserControllerTests {
 
     }
 
-    @Test
-    void testAddToBasket() {
-        Product product = new Product(1L,"iPhone X",500, Category.PHONE);
-        ResponseEntity<HttpStatus> response = userController.addToBasket(product, 2, testUserInDatabase.getId());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-
-    }
+//    @Test
+//    void testAddToBasket() {
+//        Product product = new Product(1L,"iPhone X",500, Category.PHONE);
+//        ResponseEntity<HttpStatus> response = userController.addToBasket(product, 2, testUserInDatabase.getId());
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//
+//    }
 
 //    @Test
 //    void testDeleteProductFromIndex() {

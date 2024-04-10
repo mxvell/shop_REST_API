@@ -1,5 +1,6 @@
 package prachykAndMoroka.market.manager;
 
+
 public class JsonValidationResult {
     private boolean isValid;
     private String errorMsg;

@@ -1,18 +1,13 @@
 package prachykAndMoroka.market.manager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.micrometer.common.lang.Nullable;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import prachykAndMoroka.market.dto.ProductFromJsonDTO;
 import prachykAndMoroka.market.model.Product;
 import prachykAndMoroka.market.service.ProductService;
 
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,20 +57,19 @@ public class BasketProductManager {
         return productList;
     }
 
+
     public String generateJson(List<ProductFromJsonDTO> productList) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(productList);
     }
 
-    //    public boolean isValidJson(final String json) {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        try {
-//            objectMapper.readTree(json);
-//        } catch (JsonProcessingException e) {
-//            return false;
-//        }
-//        return true;
-//    }
+    public ProductFromJsonDTO addProductFromUserBasket(long productId, int quantity) {
+        ProductFromJsonDTO product = new ProductFromJsonDTO();
+        product.setProductId(productId);
+        product.setQuantity(quantity);
+        return product;
+    }
+
     public JsonValidationResult isValidJson(final String json) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {

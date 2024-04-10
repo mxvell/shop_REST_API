@@ -1,6 +1,7 @@
 package prachykAndMoroka.market.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -82,20 +83,21 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
     //TODO ПЕРЕРОБИТИ ЦЕЙ МЕТОД ВІН НЕ КОРЕКТНИЙ
-    @PostMapping("/basket/add")
-    public ResponseEntity<HttpStatus> addToBasket(@RequestBody Product productId, @RequestParam int quantity, @RequestParam Long id) {
-        User user = userService.findById(id);
-        user.addProductToBasket(productId, quantity);
-        userService.saveUser(user);
+    //TODO NOT SAVING PRODUCT ID ANT QUANTITY IN DB
+    @PostMapping("/basket/add/{userId}/{basketId}/{productId}/{quantity}")
+    public ResponseEntity<HttpStatus> addToBasket(@PathVariable long userId, @PathVariable long basketId, @PathVariable long productId, @PathVariable int quantity) throws UserNotFoundException, JsonProcessingException {
+        userService.addProductToBasket(userId, basketId, productId, quantity);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/basket/delete/{userId}/{productId}/{quantity}")
-    public ResponseEntity<HttpStatus> deleteProductsFromIndex(@PathVariable long userId, @PathVariable long productId, @PathVariable int quantity) throws UserNotFoundException{
-        userService.deleteProductByIndexInBasket(userId,productId,quantity);
+    public ResponseEntity<HttpStatus> deleteProductsFromIndex(@PathVariable long userId, @PathVariable long productId, @PathVariable int quantity) throws UserNotFoundException {
+        userService.deleteProductByIndexInBasket(userId, productId, quantity);
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
     //TODO ПЕРЕРОБИТИ ЦЕЙ МЕТОД ВІН НЕ КОРЕКТНИЙ
     @DeleteMapping("/basket/deleteAll")
     public ResponseEntity<HttpStatus> clearBasket(@RequestParam Long id) {
@@ -114,6 +116,7 @@ public class UserController {
     }
 
     @GetMapping("/basket/{id}")
+    @ExceptionHandler({UserNotFoundException.class})
     public ResponseEntity<List<ProductFromJsonDTO>> getBasketProductsOfUser(@PathVariable Long id) throws UserNotFoundException {
         List<ProductFromJsonDTO> allProductsInBasket = userService.getAllProductsInBasket(id);
         if (allProductsInBasket == null) {
