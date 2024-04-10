@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import prachykAndMoroka.market.dto.ProductFromJsonDTO;
 import prachykAndMoroka.market.manager.BasketProductManager;
+import prachykAndMoroka.market.manager.JsonValidationResult;
 import prachykAndMoroka.market.model.Basket;
 import prachykAndMoroka.market.model.User;
 import prachykAndMoroka.market.repository.UserRepository;
@@ -82,14 +83,20 @@ public class UserService {
         String basketData = basket.getBasketData();
         //TODO add JSON validation
         if (basketData == null || basketData.length() == 0) {
-            return null;
+            JsonValidationResult result = basketProductManager.isValidJson(basketData);
+            if (result.isValid()) {
+                System.out.println("JSON IS VALID");
+            } else {
+                System.out.println("JSON IS INVALID" + result.getErrorMsg());
+            }
+
         }
 
         List<ProductFromJsonDTO> result;
         try {
             result = basketProductManager.getAllProducts(basketData);
         } catch (JsonProcessingException e) {
-            return (List<ProductFromJsonDTO>) new JsonParsingException("Error parsing basket data for user ",e);
+            return (List<ProductFromJsonDTO>) new JsonParsingException("Error parsing basket data for user ", e);
         }
 
         return result;
@@ -107,7 +114,13 @@ public class UserService {
         }
         String basketData = basket.getBasketData();
         if (basketData == null || basketData.length() == 0) {
-            throw new RuntimeException("USER BASKET DATA IS NULL OR EMPTY");
+            JsonValidationResult result = basketProductManager.isValidJson(basketData);
+            if (result.isValid()) {
+                System.out.println("JSON IS VALID");
+            } else {
+                System.out.println("JSON IS INVALID" + result.getErrorMsg());
+            }
+
         }
 
         String updatedJson;
@@ -115,7 +128,7 @@ public class UserService {
             List<ProductFromJsonDTO> updatedList = basketProductManager.deleteProductFromBasket(productId, quantity, basketData);
             updatedJson = basketProductManager.generateJson(updatedList);
         } catch (JsonProcessingException e) {
-            throw new JsonParsingException("Error parsing basket data",e);
+            throw new JsonParsingException("Error parsing basket data", e);
         }
         basket.setBasketData(updatedJson);
         user.setBasket(basket);

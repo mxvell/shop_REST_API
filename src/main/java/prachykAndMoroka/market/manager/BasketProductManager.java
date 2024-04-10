@@ -1,6 +1,8 @@
 package prachykAndMoroka.market.manager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.EntityNotFoundException;
@@ -45,24 +47,42 @@ public class BasketProductManager {
 
     public List<ProductFromJsonDTO> deleteProductFromBasket(long productId, int quantity, String basketData) throws JsonProcessingException {
         List<ProductFromJsonDTO> productList = getAllProducts(basketData);
-        for (ProductFromJsonDTO product : productList){
-              if (product.getProductId() == productId){
-                  int actualQty = product.getQuantity();
-                  int newQty = actualQty - quantity;
-                  if (newQty <= 0){
-                      productList.remove(product);
-                  }else {
-                      product.setQuantity(newQty);
-                  }
-                  break;
-              }
+        for (ProductFromJsonDTO product : productList) {
+            if (product.getProductId() == productId) {
+                int actualQty = product.getQuantity();
+                int newQty = actualQty - quantity;
+                if (newQty <= 0) {
+                    productList.remove(product);
+                } else {
+                    product.setQuantity(newQty);
+                }
+                break;
+            }
         }
         return productList;
     }
 
-    public String generateJson(List<ProductFromJsonDTO> productList) throws JsonProcessingException{
+    public String generateJson(List<ProductFromJsonDTO> productList) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(productList);
     }
 
+    //    public boolean isValidJson(final String json) {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try {
+//            objectMapper.readTree(json);
+//        } catch (JsonProcessingException e) {
+//            return false;
+//        }
+//        return true;
+//    }
+    public JsonValidationResult isValidJson(final String json) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            objectMapper.readTree(json);
+            return new JsonValidationResult(true, null);
+        } catch (JsonProcessingException e) {
+            return new JsonValidationResult(false, e.getMessage());
+        }
+    }
 }
