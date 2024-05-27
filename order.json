@@ -1,0 +1,13 @@
+{
+  "id": 1,
+  "order_info": [
+    {
+      "order_status": "IN_PROGRESS",
+      "user_id": 2
+    },
+    {
+      "order_status": "ORDER_ACCEPTED",
+      "user_id": 3
+    }
+  ]
+}

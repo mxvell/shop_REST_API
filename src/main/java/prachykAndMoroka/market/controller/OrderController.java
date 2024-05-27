@@ -30,9 +30,9 @@ public class OrderController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<Boolean> updateStatus(@PathVariable Long id, @RequestParam OrderStatus orderStatus) {
+    public ResponseEntity<Boolean> updateStatus(@PathVariable Long id) {
         try {
-            orderService.updateOrderStatus(id, orderStatus);
+            orderService.updateOrderStatus(id);
             return ResponseEntity.ok(true);
         } catch (NullPointerException exception) {
             return ResponseEntity.badRequest().body(false);

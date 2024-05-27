@@ -25,12 +25,12 @@ public class OrderService {
     }
 
     @Transactional
-    public void updateOrderStatus(Long orderId, OrderStatus orderStatus) {
+    public void updateOrderStatus(Long orderId) {
         Order order = findById(orderId);
         if (order == null) {
             throw new NullPointerException("Order not found with id " + orderId);
         }
-        order.setOrderStatus(orderStatus);
+
         orderRepository.save(order);
     }
 

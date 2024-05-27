@@ -31,7 +31,7 @@ class UserControllerTests {
     private UserController userController;
 
 
-    private static final User testUserInDatabase = new User(1L, "John", "Doe", "213213@gmasil.com", new Basket(), new ArrayList<Order>());
+    private static final User testUserInDatabase = new User(1L, "John", "Doe", "213213@gmasil.com", new Basket(), new Order());
 
 
     @BeforeAll

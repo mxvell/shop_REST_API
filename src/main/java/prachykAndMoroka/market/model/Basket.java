@@ -24,30 +24,13 @@ public class Basket {
     public Basket() {
     }
 
-    public List<Product> getProducts() {
-        //TODO: implement in service and delete
-        return null;
-    }
-
-    public void deleteProductsByIndex(Long index) {
-        //TODO: implement in service  and delete
-    }
-
-    public void deleteAllProducts() {
-        //TODO: implement in service and delete
-    }
-
+// TODO логіка метода повинна находитить в userService
     public double getTotalPrice(List<Product> products) {
         double total = 0;
         for (Product product : products) {
             total += product.getPrice();
         }
         return total;
-    }
-
-
-    public void setProducts(List<Product> products) {
-        //TODO: implement in service and delete
     }
 
 

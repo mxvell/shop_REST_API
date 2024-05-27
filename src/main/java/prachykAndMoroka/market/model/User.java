@@ -22,48 +22,31 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "basket_id", referencedColumnName = "id")
     private Basket basket;
-    @JsonIgnore
-    @OneToMany(mappedBy = "userId")
-    private List<Order> orders;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+//    private List<Order> orders;
 
     public User() {
 
     }
 
-    public User(String name, String surname, String email, Basket basket, List<Order> orders) {
+    public User(String name, String surname, String email, Basket basket) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.basket = basket;
-        this.orders = orders;
+
     }
 
-    public User(Long id, String name, String surname, String email, Basket basket, List<Order> orders) {
+    public User(Long id, String name, String surname, String email, Basket basket) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.basket = basket;
-        this.orders = orders;
+
     }
-
-    public void addProductToBasket(Product product, int quantity) {
-        for (int i = 1; i < quantity; i++) {
-            basket.getProducts().add(product);
-
-        }
-    }
-
-    public void deleteProductFromBasketIndex(long index) {
-        if (!basket.getProducts().isEmpty()) {
-            basket.deleteProductsByIndex(index);
-        }
-    }
-
-    public void deleteAllProductsFromBasket() {
-        basket.deleteAllProducts();
-    }
-
+    // todo ПЕРЕНЕСТИ МЕТОД get total price in basket  з класу юзер до userService
     public double getTotalPriceInBasket(List<Product> products) {
         return basket.getTotalPrice(products);
     }
@@ -76,13 +59,6 @@ public class User {
         this.basket = basket;
     }
 
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
 
     public Long getId() {
         return id;
@@ -117,17 +93,16 @@ public class User {
     }
 
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof User)) return false;
         User user = (User) o;
-        return id == user.id && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(email, user.email) && Objects.equals(basket, user.basket) && Objects.equals(orders, user.orders);
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(email, user.email) && Objects.equals(basket, user.basket);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, surname, email, basket, orders);
+        return Objects.hash(id, name, surname, email, basket);
     }
 }
