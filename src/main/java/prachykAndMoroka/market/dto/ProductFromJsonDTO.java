@@ -13,6 +13,11 @@ public class ProductFromJsonDTO {
     public ProductFromJsonDTO() {
     }
 
+    public ProductFromJsonDTO(long productId, int quantity) {
+        this.productId = productId;
+        this.quantity = quantity;
+    }
+
     public long getProductId() {
         return productId;
     }

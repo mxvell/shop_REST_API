@@ -84,11 +84,10 @@ public class UserController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    //TODO ПЕРЕРОБИТИ ЦЕЙ МЕТОД ВІН НЕ КОРЕКТНИЙ
-    //TODO NOT SAVING PRODUCT ID ANT QUANTITY IN DB
-    @PostMapping("/basket/add/{userId}/{basketId}/{productId}/{quantity}")
-    public ResponseEntity<HttpStatus> addToBasket(@PathVariable long userId, @PathVariable long basketId, @PathVariable long productId, @PathVariable int quantity) throws UserNotFoundException, JsonProcessingException {
-        userService.addProductToBasket(userId, basketId, productId, quantity);
+
+    @PostMapping("/basket/add/{userId}/{productId}/{quantity}")
+    public ResponseEntity<HttpStatus> addToBasket(@PathVariable long userId, @PathVariable long productId, @PathVariable int quantity) throws UserNotFoundException, JsonProcessingException {
+        userService.addProductToBasket(userId, productId, quantity);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
@@ -98,13 +97,11 @@ public class UserController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    //TODO ПЕРЕРОБИТИ ЦЕЙ МЕТОД ВІН НЕ КОРЕКТНИЙ
-    @DeleteMapping("/basket/deleteAll")
-    public ResponseEntity<HttpStatus> clearBasket(@RequestParam Long id) {
-        User user = userService.findById(id);
-        user.deleteAllProductsFromBasket();
-        userService.saveUser(user);
-        return ResponseEntity.ok().build();
+
+    @DeleteMapping("/basket/deleteAll/{userId}")
+    public ResponseEntity<HttpStatus> clearBasket(@PathVariable long userId) throws UserNotFoundException, JsonProcessingException {
+        userService.deleteAllProductsInBasket(userId);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @GetMapping("/basket/total/{id}")

@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import prachykAndMoroka.market.dto.ProductFromJsonDTO;
 import prachykAndMoroka.market.model.Product;
+import prachykAndMoroka.market.model.User;
 import prachykAndMoroka.market.service.ProductService;
+import prachykAndMoroka.market.utill.EmptyBasketException;
+import prachykAndMoroka.market.utill.JsonParsingException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -40,7 +42,7 @@ public class BasketProductManager {
     }
 
 
-    public List<ProductFromJsonDTO> deleteProductFromBasket(long productId, int quantity, String basketData) throws JsonProcessingException {
+    public List<ProductFromJsonDTO> deleteProductFromBasket(long productId, int quantity, String basketData) throws JsonProcessingException, EmptyBasketException {
         List<ProductFromJsonDTO> productList = getAllProducts(basketData);
         for (ProductFromJsonDTO product : productList) {
             if (product.getProductId() == productId) {
@@ -50,6 +52,7 @@ public class BasketProductManager {
                     productList.remove(product);
                 } else {
                     product.setQuantity(newQty);
+                    throw new EmptyBasketException("You can't delete product, because basket empty");
                 }
                 break;
             }
@@ -63,12 +66,6 @@ public class BasketProductManager {
         return objectMapper.writeValueAsString(productList);
     }
 
-    public ProductFromJsonDTO addProductFromUserBasket(long productId, int quantity) {
-        ProductFromJsonDTO product = new ProductFromJsonDTO();
-        product.setProductId(productId);
-        product.setQuantity(quantity);
-        return product;
-    }
 
     public JsonValidationResult isValidJson(final String json) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -78,5 +75,38 @@ public class BasketProductManager {
         } catch (JsonProcessingException e) {
             return new JsonValidationResult(false, e.getMessage());
         }
+    }
+
+    public void addProductToBasket(User user, Product product, int quantity) throws JsonProcessingException {
+        if (user.getBasket() == null || user.getBasket().getBasketData() == null || user.getBasket().getBasketData().isEmpty()) {
+            throw new JsonParsingException("User basket is null tech error");
+        }
+
+        List<ProductFromJsonDTO> productsFromBasketJson = getAllProducts(user.getBasket().getBasketData());
+        boolean isFoundInBasket = false;
+        for (ProductFromJsonDTO pr : productsFromBasketJson) {
+            if (pr.getProductId() == product.getId()) {
+                pr.setQuantity(pr.getQuantity() + quantity);
+                isFoundInBasket = true;
+                break;
+            }
+        }
+        if (isFoundInBasket) {
+            productsFromBasketJson.add(new ProductFromJsonDTO(product.getId(), quantity));
+        }
+        user.getBasket().setBasketData(generateJson(productsFromBasketJson));
+    }
+
+    public void deleteAllProductToBasket(User user) throws JsonProcessingException {
+        if (user.getBasket() == null || user.getBasket().getBasketData() == null || user.getBasket().getBasketData().isEmpty()) {
+            throw new JsonParsingException("User basket is null tech error");
+        }
+        List<ProductFromJsonDTO> productsFromBasketJson = getAllProducts(user.getBasket().getBasketData());
+          if (!productsFromBasketJson.isEmpty()){
+              productsFromBasketJson.clear();
+              user.getBasket().setBasketData(generateJson(productsFromBasketJson));
+        }else {
+              throw new EmptyBasketException("You can't delete all products, because basket empty");
+          }
     }
 }

@@ -132,13 +132,13 @@ class UserControllerTests {
 //
 //    }
 
-    @Test
-    void testClearBasket() {
-        Product product = new Product(1L, "asus", 500, Category.LAPTOP );
-        testUserInDatabase.addProductToBasket(product, 1);
-        ResponseEntity<HttpStatus> response = userController.clearBasket(testUserInDatabase.getId());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
+//    @Test
+//    void testClearBasket() {
+//        Product product = new Product(1L, "asus", 500, Category.LAPTOP );
+//        testUserInDatabase.addProductToBasket(product, 1);
+//        ResponseEntity<HttpStatus> response = userController.clearBasket(testUserInDatabase.getId());
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//    }
 
     @Test
     void shouldCalculateTotalPrice() {

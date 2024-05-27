@@ -9,13 +9,17 @@ import prachykAndMoroka.market.dto.ProductFromJsonDTO;
 import prachykAndMoroka.market.manager.BasketProductManager;
 import prachykAndMoroka.market.manager.JsonValidationResult;
 import prachykAndMoroka.market.model.Basket;
+import prachykAndMoroka.market.model.Product;
 import prachykAndMoroka.market.model.User;
+import prachykAndMoroka.market.repository.ProductRepository;
 import prachykAndMoroka.market.repository.UserRepository;
 import prachykAndMoroka.market.utill.JsonParsingException;
+import prachykAndMoroka.market.utill.ProductNotFoundException;
 import prachykAndMoroka.market.utill.UserNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -23,11 +27,13 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final BasketProductManager basketProductManager;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, BasketProductManager basketProductManager) {
+    public UserService(UserRepository userRepository, BasketProductManager basketProductManager, ProductRepository productRepository) {
         this.userRepository = userRepository;
         this.basketProductManager = basketProductManager;
+        this.productRepository = productRepository;
     }
 
     public List<User> findAll() {
@@ -119,7 +125,6 @@ public class UserService {
             } else {
                 System.out.println("JSON IS INVALID" + result.getErrorMsg());
             }
-
         }
 
         String updatedJson;
@@ -134,39 +139,17 @@ public class UserService {
         userRepository.save(user);
     }
 
-@Transactional
-    public void addProductToBasket(long userId, long basketId, long productId, int quantity) throws UserNotFoundException, JsonParsingException, JsonProcessingException {
-        User user = findById(userId);
-        if (user == null) {
-            throw new UserNotFoundException(userId);
-        }
-        Basket basket = user.getBasket();
-        if (!basket.getId().equals(basketId)) {
-            throw new IllegalArgumentException("incorrect basket id");
-        }
-        String basketData = basket.getBasketData();
-        List<ProductFromJsonDTO> currentProducts = new ArrayList<>();
-        if (basketData == null || basketData.length() == 0) {
-            currentProducts = basketProductManager.getAllProducts(basketData);
-            JsonValidationResult result = basketProductManager.isValidJson(basketData);
 
-            if (result.isValid()) {
-                System.out.println("JSON IS VALID");
-            } else {
-                System.out.println("JSON IS INVALID" + result.getErrorMsg());
-            }
-        }
-        String updateJson;
-        try {
-            ProductFromJsonDTO newProduct = basketProductManager.addProductFromUserBasket(productId, quantity);
-            currentProducts.add(newProduct);
-            updateJson = basketProductManager.generateJson(currentProducts);
-        } catch (JsonParsingException e) {
-            throw new JsonParsingException("Error parsing basket data", e);
-        }
-        basket.setBasketData(updateJson);
-        user.setBasket(basket);
-        userRepository.save(user);
+    @Transactional
+    public void addProductToBasket(long userId, long productId, int quantity) throws UserNotFoundException, JsonParsingException, JsonProcessingException {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("No product  found with id " + productId));
+        basketProductManager.addProductToBasket(user, product, quantity);
 
+    }
+   @Transactional
+    public void deleteAllProductsInBasket(long userId) throws UserNotFoundException, JsonProcessingException {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        basketProductManager.deleteAllProductToBasket(user);
     }
 }
